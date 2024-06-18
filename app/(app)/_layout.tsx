@@ -1,11 +1,13 @@
+import { View, Text } from "react-native";
 import React from "react";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Stack } from "expo-router";
 
-export default function TabLayout() {
+export default function LayoutApp() {
   return (
-    <Stack screenOptions={{}}>
-      <Stack.Screen name="index" />
-    </Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    />
   );
 }

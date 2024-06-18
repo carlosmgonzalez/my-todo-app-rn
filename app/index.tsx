@@ -11,7 +11,7 @@ export default function InitialScreen() {
     onAuthStateChanged(auth, (user) => {
       console.log("onAuth");
       if (user) {
-        return router.replace("/(app)");
+        return router.replace("/(app)/(tabs)");
       } else {
         return router.replace("/(auth)/login");
       }
