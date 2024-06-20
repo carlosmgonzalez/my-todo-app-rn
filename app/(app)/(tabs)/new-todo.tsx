@@ -1,4 +1,5 @@
 import Colors from "@/constants/Colors";
+import { createTask } from "@/utils/firebaseConfig";
 import { Ionicons } from "@expo/vector-icons";
 import {
   DateTimePickerAndroid,
@@ -6,6 +7,7 @@ import {
 } from "@react-native-community/datetimepicker";
 
 import { Tabs, useRouter } from "expo-router";
+import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -44,15 +46,27 @@ function formatDate(date: Date) {
 }
 
 type AndroidMode = "date" | "time";
-const categoriesList = ["Design", "Development", "Research", "Fitness"];
+const categoriesList = [
+  "Desarrollo",
+  "Diseño",
+  "Backend",
+  "Testing",
+  "Mantenimiento",
+  "DevOps",
+];
 
 export default function NewTodoScreen() {
   const router = useRouter();
 
-  const [taskName, setTaskName] = useState("");
+  const auth = getAuth();
+  const userId = auth.currentUser!.uid;
+
+  const [name, setName] = useState("");
   const [categorySelected, setCategorySelected] = useState("");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [description, setDescription] = useState("");
+
+  const disabledButton = !name || !categorySelected || !date;
 
   const onChange = (
     event: DateTimePickerEvent,
@@ -80,9 +94,13 @@ export default function NewTodoScreen() {
   };
 
   const onCreateTask = () => {
-    console.log(
-      `Se a creado la tarea "${taskName}", con la descripcion "${description}" con la categoria "${categorySelected}" y el recordatorio: ${date?.toLocaleString()}`
-    );
+    if (disabledButton) return;
+
+    createTask(userId, name, description, categorySelected, date);
+
+    setName("");
+    setDescription("");
+    setCategorySelected("");
   };
 
   return (
@@ -90,8 +108,8 @@ export default function NewTodoScreen() {
       style={{
         flex: 1,
         backgroundColor: "#fff",
-        paddingHorizontal: 10,
-        paddingTop: 10,
+        paddingHorizontal: 15,
+        paddingTop: 20,
       }}
     >
       <Tabs.Screen
@@ -105,7 +123,7 @@ export default function NewTodoScreen() {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                backgroundColor: "rgba(186, 186, 186, 0.5)",
+                backgroundColor: Colors.light.backgroundLightGrey,
                 width: 40,
                 height: 40,
                 margin: 10,
@@ -117,7 +135,7 @@ export default function NewTodoScreen() {
                 <Ionicons
                   name="chevron-back-outline"
                   size={30}
-                  color="#404040"
+                  color={Colors.light.grey}
                 />
               </TouchableOpacity>
             </View>
@@ -135,9 +153,9 @@ export default function NewTodoScreen() {
             <Text style={styles.subTitle}>Task Name</Text>
             <TextInput
               mode="outlined"
-              onChangeText={setTaskName}
+              onChangeText={setName}
               placeholder="Task name"
-              value={taskName}
+              value={name}
               outlineStyle={{
                 borderColor: "#808080",
                 borderRadius: 10,
@@ -185,47 +203,16 @@ export default function NewTodoScreen() {
             <Text style={styles.subTitle}>Date & Time</Text>
             <View
               style={{
-                flexDirection: "row",
+                width: "100%",
                 justifyContent: "space-between",
+                flexDirection: "row",
                 alignItems: "center",
-                paddingVertical: 12,
-                paddingHorizontal: 12,
-                borderRadius: 10,
-                borderWidth: 1,
-                borderColor: "#808080",
+                gap: 20,
               }}
             >
-              <Text>{date && formatDate(date)}</Text>
-              <TouchableOpacity
-                style={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "rgba(193, 218, 219, 0.5)",
-                  padding: 3,
-                  borderRadius: 5,
-                }}
-                onPress={() => showDatePicker()}
-              >
-                <Ionicons
-                  name="calendar-number-outline"
-                  size={23}
-                  color={Colors.light.darkPrimaryColor}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View
-            style={[
-              styles.subContainer,
-              { flexDirection: "row", justifyContent: "space-between" },
-            ]}
-          >
-            <View>
-              <Text style={{ fontWeight: "500", fontSize: 18 }}>
-                Start time
-              </Text>
               <View
                 style={{
+                  flex: 60,
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -234,9 +221,10 @@ export default function NewTodoScreen() {
                   borderRadius: 10,
                   borderWidth: 1,
                   borderColor: "#808080",
+                  height: 55,
                 }}
               >
-                <Text>{date && date.toLocaleTimeString()}</Text>
+                <Text>{date && formatDate(date)}</Text>
                 <TouchableOpacity
                   style={{
                     justifyContent: "center",
@@ -245,23 +233,18 @@ export default function NewTodoScreen() {
                     padding: 3,
                     borderRadius: 5,
                   }}
-                  onPress={() => showTimerPicker()}
+                  onPress={() => showDatePicker()}
                 >
                   <Ionicons
-                    name="chevron-down-outline"
-                    size={15}
+                    name="calendar-number-outline"
+                    size={23}
                     color={Colors.light.darkPrimaryColor}
                   />
                 </TouchableOpacity>
               </View>
-            </View>
-
-            <View>
-              <Text style={{ fontWeight: "500", fontSize: 18 }}>
-                Start time
-              </Text>
               <View
                 style={{
+                  flex: 40,
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
@@ -270,6 +253,7 @@ export default function NewTodoScreen() {
                   borderRadius: 10,
                   borderWidth: 1,
                   borderColor: "#808080",
+                  height: 55,
                 }}
               >
                 <Text>{date && date.toLocaleTimeString()}</Text>
@@ -292,7 +276,7 @@ export default function NewTodoScreen() {
               </View>
             </View>
           </View>
-          <View style={styles.subContainer}>
+          <View style={[styles.subContainer, { marginBottom: 25 }]}>
             <Text style={styles.subTitle}>Description</Text>
             <TextInput
               mode="outlined"
@@ -306,30 +290,33 @@ export default function NewTodoScreen() {
               style={{ paddingVertical: 15 }}
             />
           </View>
-          <TouchableOpacity
-            style={{
-              width: "100%",
-              paddingVertical: 15,
-              backgroundColor: Colors.light.primaryColor,
-              borderRadius: 15,
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: 10,
-            }}
-            onPress={onCreateTask}
-          >
-            <Text
-              style={{
-                fontWeight: "500",
-                fontSize: 15,
-                color: "#fff",
-              }}
-            >
-              Create Task
-            </Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
+      <TouchableOpacity
+        style={{
+          width: "100%",
+          paddingVertical: 15,
+          backgroundColor: disabledButton
+            ? Colors.light.primaryColorOpacity
+            : Colors.light.primaryColor,
+          borderRadius: 15,
+          justifyContent: "center",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+        onPress={onCreateTask}
+        disabled={disabledButton}
+      >
+        <Text
+          style={{
+            fontWeight: "500",
+            fontSize: 15,
+            color: "#fff",
+          }}
+        >
+          Create Task
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

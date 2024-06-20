@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { Redirect, useRouter } from "expo-router";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/utils/firebaseConfig";
-import { Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import { auth } from "@/utils/firebaseConfig";
 
 export default function InitialScreen() {
   const router = useRouter();
+  const auth = getAuth();
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {

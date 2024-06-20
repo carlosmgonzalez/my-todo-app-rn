@@ -1,27 +1,20 @@
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   Image,
-  KeyboardAvoidingView,
-  Platform,
   useWindowDimensions,
   ScrollView,
 } from "react-native";
 import { TextInput } from "react-native-paper";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { auth, handleLogin } from "@/utils/firebaseConfig";
+import { handleLogin } from "@/utils/firebaseConfig";
 import { Link } from "expo-router";
 import { Button } from "react-native-paper";
 import Colors from "@/constants/Colors";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import constants from "expo-constants";
 
 export default function LoginScreen() {
-  const { top } = useSafeAreaInsets();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

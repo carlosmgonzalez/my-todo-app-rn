@@ -3,22 +3,16 @@ import {
   Text,
   StyleSheet,
   Image,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
   useWindowDimensions,
-  TouchableOpacity,
 } from "react-native";
 import { TextInput } from "react-native-paper";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { auth, handleLogin, handleRegister } from "@/utils/firebaseConfig";
+import { handleRegister } from "@/utils/firebaseConfig";
 import { Link } from "expo-router";
 import { Button } from "react-native-paper";
 import Colors from "@/constants/Colors";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import constants from "expo-constants";
-import { Ionicons } from "@expo/vector-icons";
+import Constants from "expo-constants";
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState("");
@@ -28,7 +22,7 @@ export default function RegisterScreen() {
   const [hiddenConfirmPassword, setHiddenConfirmPassword] = useState(true);
 
   const { height } = useWindowDimensions();
-  const heightScreen = height - 50 - constants.statusBarHeight;
+  const heightScreen = height - 50 - Constants.statusBarHeight;
 
   const onPress = async () => {
     if (password === confirmPassword) {

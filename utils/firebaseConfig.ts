@@ -2,13 +2,14 @@
 import { initializeApp } from "firebase/app";
 import {
   initializeAuth,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 import * as firebaseAuth from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
+import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import { Dispatch, SetStateAction } from "react";
 
 const reactNativePersistence = (firebaseAuth as any).getReactNativePersistence;
 
@@ -19,12 +20,16 @@ const firebaseConfig = {
   storageBucket: process.env.EXPO_PUBLIC_STORAGE_BUCKET,
   messagingSenderId: process.env.EXPO_PUBLIC_MESSAGING_SENDER_ID,
   appId: process.env.EXPO_PUBLIC_APP_ID,
+  databaseURL: process.env.EXPO_PUBLIC_DATABASE_URL,
 };
 
 const app = initializeApp(firebaseConfig);
-export const auth = initializeAuth(app, {
+
+const auth = initializeAuth(app, {
   persistence: reactNativePersistence(ReactNativeAsyncStorage),
 });
+
+const db = getDatabase(app);
 
 export const handleLogin = async (email: string, password: string) => {
   try {
@@ -48,4 +53,43 @@ export const logout = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const createTask = (
+  userId: string,
+  name: string,
+  description: string,
+  category: string,
+  date: Date
+) => {
+  const userTasksRef = ref(db, "users/" + userId);
+  const newTaskRef = push(userTasksRef);
+  set(newTaskRef, {
+    name,
+    description,
+    category: category.toLowerCase().trim(),
+    date: date.toISOString(),
+  });
+};
+
+interface Task {
+  category: string;
+  date: string;
+  description: string;
+  name: string;
+}
+
+type TaskResponse = Record<string, Task>;
+
+export const getAllTasks = (
+  userId: string,
+  setTasks: Dispatch<SetStateAction<TaskResponse | undefined>>
+) => {
+  const allTaskRef = ref(db, "users/" + userId);
+  onValue(allTaskRef, (snapshot) => {
+    if (snapshot.val()) {
+      const tasks = snapshot.val();
+      setTasks(tasks);
+    }
+  });
 };
