@@ -93,3 +93,17 @@ export const getAllTasks = (
     }
   });
 };
+
+export const getTaskById = (
+  userId: string,
+  taskId: string,
+  setTask: Dispatch<SetStateAction<Task | undefined>>
+) => {
+  const taskRef = ref(db, "users/" + userId + "/" + taskId);
+  onValue(taskRef, (snapshot) => {
+    if (snapshot.val()) {
+      const task = snapshot.val();
+      setTask(task);
+    }
+  });
+};

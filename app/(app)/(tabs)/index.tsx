@@ -1,6 +1,6 @@
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import { FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -10,6 +10,8 @@ import { getAllTasks } from "@/utils/firebaseConfig";
 import { getAuth } from "firebase/auth";
 
 export default function TabOneScreen() {
+  const router = useRouter();
+
   const auth = getAuth();
   const userId = auth.currentUser!.uid;
 
@@ -102,7 +104,7 @@ export default function TabOneScreen() {
       />
       <ProgressCard />
       <View style={{ marginTop: 20, flex: 1 }}>
-        <Text style={{ fontWeight: "600", fontSize: 22 }}>Today's Task</Text>
+        <Text style={{ fontWeight: "600", fontSize: 22 }}>Tasks</Text>
         <FlatList
           data={allTask}
           renderItem={({ item }) => (
@@ -129,7 +131,14 @@ export default function TabOneScreen() {
                 </Text>
                 <Text>{item.date.toLocaleString()}</Text>
               </View>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  router.navigate({
+                    pathname: "/(app)/[id]",
+                    params: { id: item.id },
+                  })
+                }
+              >
                 <Ionicons
                   name="chevron-forward-outline"
                   size={28}

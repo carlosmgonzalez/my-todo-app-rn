@@ -32,7 +32,7 @@ export const ProgressCard = () => {
             color: "#fff",
           }}
         >
-          Today's progress summery
+          Progress summery
         </Text>
         <Text
           style={{
