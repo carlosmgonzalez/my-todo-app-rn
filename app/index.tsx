@@ -9,7 +9,6 @@ export default function InitialScreen() {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      console.log("onAuth");
       if (user) {
         return router.replace("/(app)/(tabs)");
       } else {

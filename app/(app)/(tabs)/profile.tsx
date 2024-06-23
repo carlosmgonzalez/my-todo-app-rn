@@ -1,12 +1,18 @@
+import { EditImageButton } from "@/components";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { getAuth } from "firebase/auth";
+import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 
 export default function ProfileScreen() {
   const auth = getAuth();
   const user = auth.currentUser;
+
+  const [photoUrl, setPhotoUrl] = useState<string | null | undefined>(
+    user?.photoURL
+  );
 
   return (
     <View
@@ -55,7 +61,11 @@ export default function ProfileScreen() {
             }}
           >
             <Image
-              source={require("@/assets/images/no-avatar.png")}
+              source={
+                photoUrl
+                  ? { uri: photoUrl }
+                  : require("@/assets/images/no-avatar.png")
+              }
               style={{
                 width: 180,
                 height: 180,
@@ -63,25 +73,7 @@ export default function ProfileScreen() {
             />
           </View>
         </View>
-        <TouchableOpacity
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 100,
-            backgroundColor: "rgb(193, 218, 219)",
-            justifyContent: "center",
-            alignItems: "center",
-            position: "absolute",
-            bottom: 10,
-            right: 100,
-          }}
-        >
-          <Ionicons
-            name="pencil-outline"
-            size={30}
-            color={Colors.light.primaryColor}
-          />
-        </TouchableOpacity>
+        <EditImageButton setPhotoUrl={setPhotoUrl} />
       </View>
       <View
         style={{

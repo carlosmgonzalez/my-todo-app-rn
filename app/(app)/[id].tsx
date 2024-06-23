@@ -24,7 +24,6 @@ export default function TodoScreen() {
 
   useEffect(() => {
     getTaskById(userId!, taskId, setTask);
-    console.log(taskId);
   }, []);
 
   return (
