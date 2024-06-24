@@ -1,17 +1,19 @@
 import { EditImageButton } from "@/components";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
 
 export default function ProfileScreen() {
+  const router = useRouter();
+
   const auth = getAuth();
-  const user = auth.currentUser;
+  const user = auth.currentUser!;
 
   const [photoUrl, setPhotoUrl] = useState<string | null | undefined>(
-    user?.photoURL
+    user.photoURL
   );
 
   return (
@@ -89,14 +91,14 @@ export default function ProfileScreen() {
             fontSize: 20,
           }}
         >
-          No name
+          {user.displayName ? user.displayName : "No name"}
         </Text>
         <Text
           style={{
             fontWeight: "400",
           }}
         >
-          {user?.email}
+          {user.email}
         </Text>
       </View>
       <TouchableOpacity
@@ -106,7 +108,7 @@ export default function ProfileScreen() {
           alignItems: "center",
           paddingVertical: 10,
         }}
-        onPress={() => auth.signOut()}
+        onPress={() => router.navigate("(app)/edit-profile")}
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <Ionicons name="pencil-outline" size={30} color="#007cbf" />
@@ -128,7 +130,7 @@ export default function ProfileScreen() {
           alignItems: "center",
           paddingVertical: 10,
         }}
-        onPress={() => auth.signOut()}
+        onPress={() => router.navigate("(app)/change-password")}
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <Ionicons name="lock-closed-outline" size={30} color="#1dbf00" />

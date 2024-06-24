@@ -2,14 +2,22 @@ import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
+import { Task } from "@/interfaces/tasks.interface";
 
-export const ProgressCard = () => {
+export const ProgressCard = ({ tasks }: { tasks: Task[] }) => {
+  const taskDone = tasks.reduce((acc, val) => {
+    if (val.done) return acc + 1;
+    return acc;
+  }, 0);
+
+  const progress = Math.floor((taskDone * 100) / tasks.length);
+
   return (
     <View
       style={{
         padding: 20,
         borderRadius: 18,
-        height: 200,
+        height: 170,
         justifyContent: "space-between",
       }}
     >
@@ -39,7 +47,7 @@ export const ProgressCard = () => {
             color: "#fff",
           }}
         >
-          15 Tasks
+          {tasks.length} Tasks
         </Text>
       </View>
 
@@ -50,22 +58,7 @@ export const ProgressCard = () => {
           alignItems: "center",
         }}
       >
-        <View
-          style={{
-            overflow: "hidden",
-            borderRadius: 100,
-            borderWidth: 3,
-            borderColor: "#fff",
-            alignItems: "center",
-          }}
-        >
-          <Image
-            source={require("@/assets/images/no-avatar.png")}
-            style={{ width: 40, height: 40 }}
-          />
-        </View>
-
-        <View style={{ width: "80%" }}>
+        <View style={{ width: "100%" }}>
           <View
             style={{
               flexDirection: "row",
@@ -73,7 +66,7 @@ export const ProgressCard = () => {
             }}
           >
             <Text style={{ color: "#fff" }}>Progress</Text>
-            <Text style={{ color: "#fff" }}>40%</Text>
+            <Text style={{ color: "#fff" }}>{progress}%</Text>
           </View>
           <View style={{ width: "100%", top: 10 }}>
             <View
@@ -86,7 +79,7 @@ export const ProgressCard = () => {
             />
             <View
               style={{
-                width: "40%",
+                width: `${progress}%`,
                 height: 15,
                 backgroundColor: "#fff",
                 borderRadius: 10,

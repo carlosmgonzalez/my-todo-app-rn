@@ -1,26 +1,42 @@
 import { HeaderButtonBack } from "@/components";
 import Colors from "@/constants/Colors";
-import { getTaskById } from "@/utils/firebaseConfig";
+import { TaskDB } from "@/interfaces/tasks.interface";
+import {
+  deleteTask,
+  getTaskById,
+  toggleTaskDone,
+} from "@/utils/firebaseConfig";
+import { formatDate, formatTime } from "@/utils/formatDate";
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { View, Text } from "react-native";
-
-interface Task {
-  category: string;
-  date: string;
-  description: string;
-  name: string;
-}
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Touchable,
+  StyleSheet,
+} from "react-native";
 
 export default function TodoScreen() {
+  const router = useRouter();
   const params = useLocalSearchParams();
+
   const taskId = params.id as string;
   const auth = getAuth();
-  const userId = auth.currentUser?.uid;
+  const userId = auth.currentUser!.uid;
 
-  const [task, setTask] = useState<Task | undefined>();
+  const [task, setTask] = useState<TaskDB | undefined>();
+
+  const onDeleteTask = async () => {
+    await deleteTask(userId, taskId);
+    router.push("(app)/(tabs)");
+  };
+
+  const onToggleTaskDone = async () => {
+    await toggleTaskDone(userId, taskId);
+  };
 
   useEffect(() => {
     getTaskById(userId!, taskId, setTask);
@@ -31,9 +47,9 @@ export default function TodoScreen() {
       style={{
         flex: 1,
         backgroundColor: "#fff",
-        paddingHorizontal: 15,
+        padding: 15,
         paddingTop: 20,
-        gap: 20,
+        justifyContent: "space-between",
       }}
     >
       <Stack.Screen
@@ -41,64 +57,121 @@ export default function TodoScreen() {
           title: "Task Details",
           headerTitleAlign: "center",
           headerShadowVisible: false,
-          headerLeft: () => <HeaderButtonBack route="/(app)/(tabs)" />,
+          // headerLeft: () => <HeaderButtonBack route="/(app)/(tabs)" />,
         }}
       />
-      <Text style={{ fontWeight: "600", fontSize: 24 }}>{task?.name}</Text>
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          gap: 15,
+          display: "flex",
+          gap: 20,
         }}
       >
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-            width: 60,
-            height: 60,
-            borderRadius: 100,
-            backgroundColor: "rgba(17, 157, 164, 0.2)",
-          }}
-        >
-          <Ionicons
-            name="calendar-outline"
-            size={30}
-            color={Colors.light.primaryColor}
-          />
-        </View>
-        <Text style={{ fontSize: 18, color: "#808080" }}>{task?.date}</Text>
-      </View>
-      <View>
-        <Text style={{ fontWeight: "500", fontSize: 20 }}>Description</Text>
-        <Text style={{ fontWeight: "300", fontSize: 18, color: "#808080" }}>
-          {task?.description}
-        </Text>
-      </View>
-      <View>
-        <Text style={{ fontWeight: "500", fontSize: 20 }}>Category</Text>
-        <View
-          style={{
-            paddingHorizontal: 16,
-            paddingVertical: 12,
-            backgroundColor: Colors.light.primaryColor,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 10,
-          }}
-        >
-          <Text
-            style={{
-              color: "#fff",
-              fontWeight: "500",
-            }}
-          >
-            {task?.category}
+        <View>
+          <Text style={{ fontWeight: "600", fontSize: 24 }}>{task?.name}</Text>
+          <Text style={{ fontWeight: "300", fontSize: 18, color: "#808080" }}>
+            {task?.description}
           </Text>
         </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            gap: 15,
+          }}
+        >
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              width: 50,
+              height: 50,
+              borderRadius: 100,
+              backgroundColor: "rgba(17, 157, 164, 0.2)",
+            }}
+          >
+            <Ionicons
+              name="calendar-outline"
+              size={30}
+              color={Colors.light.primaryColor}
+            />
+          </View>
+          <Text style={{ fontSize: 18, color: "#000" }}>
+            {formatTime(new Date(task?.date!))} hrs -{" "}
+            {formatDate(new Date(task?.date!))}
+          </Text>
+        </View>
+
+        <View>
+          <View
+            style={{
+              paddingHorizontal: 16,
+              paddingVertical: 12,
+              backgroundColor: Colors.light.primaryColor,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 10,
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontWeight: "500",
+              }}
+            >
+              {task?.category}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 10,
+        }}
+      >
+        <TouchableOpacity style={styles.button} onPress={onToggleTaskDone}>
+          {task?.done ? (
+            <>
+              <Ionicons name="close-outline" size={30} color="#007cbf" />
+              <Text style={{ fontWeight: "500" }}>Undone</Text>
+            </>
+          ) : (
+            <>
+              <Ionicons name="checkmark-outline" size={30} color="#007cbf" />
+              <Text style={{ fontWeight: "500" }}>Done</Text>
+            </>
+          )}
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={onDeleteTask}>
+          <Ionicons name="trash-outline" size={30} color="#bf0000" />
+          <Text style={{ fontWeight: "500" }}>Delete</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    flexDirection: "row",
+    flex: 1,
+    gap: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1.5,
+  },
+});

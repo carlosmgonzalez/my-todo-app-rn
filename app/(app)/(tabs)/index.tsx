@@ -8,6 +8,8 @@ import { ProgressCard } from "@/components";
 import { useEffect, useState } from "react";
 import { getAllTasks } from "@/utils/firebaseConfig";
 import { getAuth } from "firebase/auth";
+import { TaskResponse } from "@/interfaces/tasks.interface";
+import { formatDate, formatTime } from "@/utils/formatDate";
 
 export default function TabOneScreen() {
   const router = useRouter();
@@ -15,18 +17,9 @@ export default function TabOneScreen() {
   const auth = getAuth();
   const userId = auth.currentUser!.uid;
 
-  interface Task {
-    category: string;
-    date: string;
-    description: string;
-    name: string;
-  }
-
-  type TaskResponse = Record<string, Task>;
-
   const [tasks, setTasks] = useState<TaskResponse>();
 
-  const allTask = tasks
+  const allTasks = tasks
     ? Object.values(tasks).map((task, i) => ({
         ...task,
         id: Object.keys(tasks)[i],
@@ -102,11 +95,11 @@ export default function TabOneScreen() {
           headerTitleAlign: "center",
         }}
       />
-      <ProgressCard />
+      <ProgressCard tasks={allTasks} />
       <View style={{ marginTop: 20, flex: 1 }}>
         <Text style={{ fontWeight: "600", fontSize: 22 }}>Tasks</Text>
         <FlatList
-          data={allTask}
+          data={allTasks}
           renderItem={({ item }) => (
             <View
               style={{
@@ -129,7 +122,9 @@ export default function TabOneScreen() {
                 <Text style={{ fontWeight: "500", fontSize: 16 }}>
                   {item.name}
                 </Text>
-                <Text>{item.date.toLocaleString()}</Text>
+                <Text>
+                  {formatTime(item.date)} hrs - {formatDate(item.date)}
+                </Text>
               </View>
               <TouchableOpacity
                 onPress={() =>

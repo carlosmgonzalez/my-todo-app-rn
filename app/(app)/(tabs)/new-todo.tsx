@@ -1,5 +1,6 @@
 import Colors from "@/constants/Colors";
 import { createTask } from "@/utils/firebaseConfig";
+import { formatDate } from "@/utils/formatDate";
 import { Ionicons } from "@expo/vector-icons";
 import {
   DateTimePickerAndroid,
@@ -9,41 +10,16 @@ import {
 import { Tabs, useRouter } from "expo-router";
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
-import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  Pressable,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TextInput } from "react-native-paper";
-
-function formatDate(date: Date) {
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-
-  const day = date.getDate().toString().padStart(2, "0"); // Asegura que el día tenga dos dígitos
-  const month = months[date.getMonth()];
-  const dayOfWeek = daysOfWeek[date.getDay()];
-
-  return `${day} ${month}, ${dayOfWeek}`;
-}
 
 type AndroidMode = "date" | "time";
 const categoriesList = [
@@ -123,21 +99,31 @@ export default function NewTodoScreen() {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                backgroundColor: Colors.light.backgroundLightGrey,
+                justifyContent: "center",
                 width: 40,
                 height: 40,
                 margin: 10,
-                justifyContent: "center",
-                borderRadius: 10,
+                // backgroundColor: Colors.light.backgroundLightGrey,
+                // borderRadius: 10,
               }}
             >
-              <TouchableOpacity onPress={() => router.replace("/(app)/(tabs)")}>
+              <Pressable
+                onPress={() => router.replace("/(app)/(tabs)")}
+                style={({ pressed }) => ({
+                  width: 35,
+                  height: 35,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: pressed ? "#e5e5e5" : "#fff",
+                  borderRadius: pressed ? 100 : 0,
+                })}
+              >
                 <Ionicons
-                  name="chevron-back-outline"
-                  size={30}
+                  name="arrow-back-outline"
+                  size={25}
                   color={Colors.light.grey}
                 />
-              </TouchableOpacity>
+              </Pressable>
             </View>
           ),
         }}

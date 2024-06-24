@@ -7,6 +7,8 @@ export default function LayoutApp() {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="[id]" />
+      <Stack.Screen name="edit-profile" />
+      <Stack.Screen name="change-password" />
     </Stack>
   );
 }

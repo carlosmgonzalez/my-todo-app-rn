@@ -3,10 +3,13 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
 import {
+  deleteObject,
   getDownloadURL,
   getStorage,
+  listAll,
   ref,
   uploadBytes,
+  uploadBytesResumable,
   uploadString,
 } from "firebase/storage";
 import { getAuth, updateProfile } from "firebase/auth";
@@ -19,6 +22,7 @@ export const EditImageButton = ({
 }) => {
   const storage = getStorage();
   const auth = getAuth();
+  const userUid = auth.currentUser!.uid;
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -29,24 +33,38 @@ export const EditImageButton = ({
       quality: 1,
     });
 
-    if (!result.canceled) {
-      const res = await fetch(result.assets[0].uri);
-      const imageBlob = await res.blob();
+    if (result.canceled) return;
 
-      const fileExtension = result.assets[0].uri.split(".").at(-1);
-      const fileName = `${Date.now()}.${fileExtension}`;
-      const storageRef = ref(storage, "images/" + fileName);
+    const res = await fetch(result.assets[0].uri);
+    const imageBlob = await res.blob();
 
-      const snapshot = await uploadBytes(storageRef, imageBlob);
+    const fileExtension = result.assets[0].uri.split(".").at(-1);
+    const fileName = `${Date.now()}.${fileExtension}`;
 
-      if (snapshot.ref.fullPath) {
-        const imageUrl = await getDownloadURL(storageRef);
-        await updateProfile(auth.currentUser!, {
-          photoURL: imageUrl,
-        });
-        setPhotoUrl(imageUrl);
-      }
+    // const existUserPhoto = ref(storage, "userPhoto/" + userUid);
+    const existUserPhoto = ref(storage, "userPhoto/" + userUid);
+    const list = await listAll(existUserPhoto);
+    if (list.items.length !== 0) {
+      const fullPathUserPhoto = list.items[0].fullPath;
+      const refUserPhoto = ref(storage, fullPathUserPhoto);
+      deleteObject(refUserPhoto);
     }
+
+    const storageRef = ref(storage, "userPhoto/" + userUid + "/" + fileName);
+    const uploadUserPhoto = uploadBytesResumable(storageRef, imageBlob);
+
+    uploadUserPhoto.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {},
+      async () => {
+        const userPhotoUrl = await getDownloadURL(storageRef);
+        await updateProfile(auth.currentUser!, {
+          photoURL: userPhotoUrl,
+        });
+        setPhotoUrl(userPhotoUrl);
+      }
+    );
   };
 
   return (

@@ -8,8 +8,18 @@ import {
 } from "firebase/auth";
 import * as firebaseAuth from "firebase/auth";
 import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
-import { getDatabase, onValue, push, ref, set } from "firebase/database";
+import {
+  get,
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  remove,
+  set,
+  update,
+} from "firebase/database";
 import { Dispatch, SetStateAction } from "react";
+import { TaskDB, TaskResponse } from "@/interfaces/tasks.interface";
 
 const reactNativePersistence = (firebaseAuth as any).getReactNativePersistence;
 
@@ -69,17 +79,9 @@ export const createTask = (
     description,
     category: category.toLowerCase().trim(),
     date: date.toISOString(),
+    done: false,
   });
 };
-
-interface Task {
-  category: string;
-  date: string;
-  description: string;
-  name: string;
-}
-
-type TaskResponse = Record<string, Task>;
 
 export const getAllTasks = (
   userId: string,
@@ -97,7 +99,7 @@ export const getAllTasks = (
 export const getTaskById = (
   userId: string,
   taskId: string,
-  setTask: Dispatch<SetStateAction<Task | undefined>>
+  setTask: Dispatch<SetStateAction<TaskDB | undefined>>
 ) => {
   const taskRef = ref(db, "users/" + userId + "/" + taskId);
   onValue(taskRef, (snapshot) => {
@@ -106,4 +108,31 @@ export const getTaskById = (
       setTask(task);
     }
   });
+};
+
+export const toggleTaskDone = async (userId: string, taskId: string) => {
+  const taskRef = ref(db, "users/" + userId + "/" + taskId);
+
+  try {
+    const snapshot = await get(taskRef);
+
+    if (snapshot.exists()) {
+      const task = snapshot.val();
+      const currentTaskDone = task.done;
+
+      await update(taskRef, { done: !currentTaskDone });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const deleteTask = async (userId: string, taskId: string) => {
+  const taskRef = ref(db, "users/" + userId + "/" + taskId);
+
+  try {
+    await remove(taskRef);
+  } catch (error) {
+    console.log(error);
+  }
 };
