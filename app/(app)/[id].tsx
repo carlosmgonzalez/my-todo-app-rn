@@ -1,5 +1,6 @@
 import { HeaderButtonBack } from "@/components";
 import Colors from "@/constants/Colors";
+import { defaultStyles } from "@/constants/Styles";
 import { TaskDB } from "@/interfaces/tasks.interface";
 import {
   deleteTask,
@@ -8,16 +9,10 @@ import {
 } from "@/utils/firebaseConfig";
 import { formatDate, formatTime } from "@/utils/formatDate";
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Touchable,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 export default function TodoScreen() {
   const router = useRouter();
@@ -44,22 +39,8 @@ export default function TodoScreen() {
 
   return (
     <View
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-        padding: 15,
-        paddingTop: 20,
-        justifyContent: "space-between",
-      }}
+      style={[defaultStyles.container, { justifyContent: "space-between" }]}
     >
-      <Stack.Screen
-        options={{
-          title: "Task Details",
-          headerTitleAlign: "center",
-          headerShadowVisible: false,
-          // headerLeft: () => <HeaderButtonBack route="/(app)/(tabs)" />,
-        }}
-      />
       <View
         style={{
           display: "flex",

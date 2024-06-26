@@ -1,4 +1,7 @@
+import { CategoryItem } from "@/components/CategoryItem";
+import { HeaderLeftBack } from "@/components/HeaderLeftBack";
 import Colors from "@/constants/Colors";
+import { defaultStyles } from "@/constants/Styles";
 import { createTask } from "@/utils/firebaseConfig";
 import { formatDate } from "@/utils/formatDate";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,16 +13,10 @@ import {
 import { Tabs, useRouter } from "expo-router";
 import { getAuth } from "firebase/auth";
 import { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  ScrollView,
-  Pressable,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TextInput } from "react-native-paper";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type AndroidMode = "date" | "time";
 const categoriesList = [
@@ -38,11 +35,11 @@ export default function NewTodoScreen() {
   const userId = auth.currentUser!.uid;
 
   const [name, setName] = useState("");
-  const [categorySelected, setCategorySelected] = useState("");
+  const [category, setCategory] = useState("");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [description, setDescription] = useState("");
 
-  const disabledButton = !name || !categorySelected || !date;
+  const disabledButton = !name || !category || !date;
 
   const onChange = (
     event: DateTimePickerEvent,
@@ -69,63 +66,27 @@ export default function NewTodoScreen() {
     showMode("time");
   };
 
-  const onCreateTask = () => {
+  const onCreateTask = async () => {
     if (disabledButton) return;
 
-    createTask(userId, name, description, categorySelected, date);
+    await createTask(userId, name, description, category, date);
 
     setName("");
     setDescription("");
-    setCategorySelected("");
+    setCategory("");
+
+    router.push("(app)/(tabs)");
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "#fff",
-        paddingHorizontal: 15,
-        paddingTop: 20,
-      }}
-    >
+    <View style={defaultStyles.container}>
       <Tabs.Screen
         options={{
           title: "Create New Task",
           headerTitleAlign: "center",
           headerShadowVisible: false,
           tabBarStyle: { display: "none" },
-          headerLeft: () => (
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 40,
-                height: 40,
-                margin: 10,
-                // backgroundColor: Colors.light.backgroundLightGrey,
-                // borderRadius: 10,
-              }}
-            >
-              <Pressable
-                onPress={() => router.replace("/(app)/(tabs)")}
-                style={({ pressed }) => ({
-                  width: 35,
-                  height: 35,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: pressed ? "#e5e5e5" : "#fff",
-                  borderRadius: pressed ? 100 : 0,
-                })}
-              >
-                <Ionicons
-                  name="arrow-back-outline"
-                  size={25}
-                  color={Colors.light.grey}
-                />
-              </Pressable>
-            </View>
-          ),
+          headerLeft: () => <HeaderLeftBack />,
         }}
       />
       <ScrollView>
@@ -153,35 +114,15 @@ export default function NewTodoScreen() {
             <FlatList
               horizontal
               data={categoriesList}
-              renderItem={({ item: category }) => (
-                <TouchableOpacity
-                  key={category}
-                  onPress={() => setCategorySelected(category)}
-                  style={{
-                    paddingHorizontal: 16,
-                    paddingVertical: 12,
-                    backgroundColor:
-                      category === categorySelected
-                        ? Colors.light.primaryColor
-                        : "rgba(193, 218, 219, 0.5)",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 10,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: category === categorySelected ? "#fff" : "#000",
-                      fontWeight: "500",
-                    }}
-                  >
-                    {category}
-                  </Text>
-                </TouchableOpacity>
+              renderItem={({ item }) => (
+                <CategoryItem
+                  item={item}
+                  category={category}
+                  setCategory={setCategory}
+                />
               )}
               keyExtractor={(item) => item}
               ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-              // showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
             />
           </View>

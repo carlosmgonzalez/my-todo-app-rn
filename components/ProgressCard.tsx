@@ -10,7 +10,8 @@ export const ProgressCard = ({ tasks }: { tasks: Task[] }) => {
     return acc;
   }, 0);
 
-  const progress = Math.floor((taskDone * 100) / tasks.length);
+  const progress =
+    tasks.length === 0 ? 0 : Math.floor((taskDone * 100) / tasks.length);
 
   return (
     <View

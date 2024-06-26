@@ -1,7 +1,8 @@
+import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Pressable, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function LayoutAuth() {
@@ -26,18 +27,39 @@ export default function LayoutAuth() {
                   paddingLeft: 10,
                 }}
               >
-                <TouchableOpacity
-                  onPress={() => router.replace("/(auth)/login")}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: 40,
+                    height: 40,
+                  }}
                 >
-                  <Ionicons name="arrow-back-outline" size={40} color="#000" />
-                </TouchableOpacity>
-                <Text style={{ fontWeight: "600", fontSize: 18 }}>Back</Text>
+                  <Pressable
+                    onPress={() => router.replace("/(auth)/login")}
+                    style={({ pressed }) => ({
+                      width: 35,
+                      height: 35,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: pressed ? "#e5e5e5" : "#fff",
+                      borderRadius: pressed ? 100 : 0,
+                    })}
+                  >
+                    <Ionicons
+                      name="arrow-back-outline"
+                      size={25}
+                      color={Colors.light.grey}
+                    />
+                  </Pressable>
+                </View>
               </View>
             ),
           }}
         />
       </Stack>
-      <StatusBar style="dark" backgroundColor="white" />
+      <StatusBar style="dark" backgroundColor="#fff" />
     </View>
   );
 }

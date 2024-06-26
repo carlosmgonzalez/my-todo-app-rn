@@ -1,8 +1,15 @@
 import Colors from "@/constants/Colors";
+import { Ionicons } from "@expo/vector-icons";
 import { Stack, useRouter } from "expo-router";
-import { getAuth, updateProfile } from "firebase/auth";
+import {
+  getAuth,
+  sendEmailVerification,
+  updateEmail,
+  updateProfile,
+  verifyBeforeUpdateEmail,
+} from "firebase/auth";
 import { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 
 export default function EditProfileScreen() {
@@ -25,10 +32,34 @@ export default function EditProfileScreen() {
     }
   };
 
-  const onUpdateEmail = () => {};
+  const onUpdateEmail = async () => {
+    try {
+      await updateEmail(user, email);
+      console.log("email updated");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onVerifyEmail = async () => {
+    try {
+      await sendEmailVerification(user);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onVerifyNewEmail = async () => {
+    try {
+      await verifyBeforeUpdateEmail(user, email);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const onSave = async () => {
     await onUpdateFullname();
+    await onUpdateEmail();
     router.push("(app)/(tabs)/profile");
   };
 
@@ -42,13 +73,6 @@ export default function EditProfileScreen() {
         justifyContent: "space-between",
       }}
     >
-      <Stack.Screen
-        options={{
-          title: "Edit Profile",
-          headerShadowVisible: false,
-          headerTitleAlign: "center",
-        }}
-      />
       <View style={{ gap: 20 }}>
         <TextInput
           onChangeText={setFullName}
@@ -61,6 +85,38 @@ export default function EditProfileScreen() {
             borderRadius: 5,
           }}
         />
+
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderWidth: 1,
+            borderRadius: 10,
+            borderColor: "#f1f1f1",
+            padding: 5,
+          }}
+        >
+          <Text
+            style={{
+              flex: 1,
+              fontWeight: "500",
+              fontSize: 15,
+              textAlign: "center",
+            }}
+          >
+            {user.emailVerified ? "Verified Email" : "Unverified Email"}
+          </Text>
+          {!user.emailVerified && (
+            <TouchableOpacity
+              style={[styles.button, { flex: 1 }]}
+              onPress={onVerifyEmail}
+            >
+              <Ionicons name="mail-outline" size={30} color="1dbf00" />
+              <Text style={{ fontWeight: "500" }}>Verify Email</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <TextInput
           onChangeText={setEmail}
           placeholder=""
@@ -72,6 +128,10 @@ export default function EditProfileScreen() {
             borderRadius: 5,
           }}
         />
+        <TouchableOpacity style={styles.button} onPress={onVerifyNewEmail}>
+          <Ionicons name="mail-outline" size={30} color="1dbf00" />
+          <Text style={{ fontWeight: "500" }}>Verify New Email & Change</Text>
+        </TouchableOpacity>
       </View>
       <View>
         <TouchableOpacity
@@ -100,3 +160,21 @@ export default function EditProfileScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: "#fff",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    flexDirection: "row",
+    gap: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1.5,
+  },
+});

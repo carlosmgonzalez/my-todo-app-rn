@@ -8,6 +8,7 @@ import { DefaultTheme, PaperProvider } from "react-native-paper";
 import Colors from "@/constants/Colors";
 export { ErrorBoundary } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { StatusBar } from "expo-status-bar";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -61,6 +62,7 @@ function RootLayoutNav() {
           <Stack.Screen name="(auth)" options={{ headerShown: false }} />
           <Stack.Screen name="(app)" options={{ headerShown: false }} />
         </Stack>
+        <StatusBar style="dark" backgroundColor="#fff" />
       </PaperProvider>
     </GestureHandlerRootView>
   );

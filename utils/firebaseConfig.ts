@@ -65,7 +65,7 @@ export const logout = async () => {
   }
 };
 
-export const createTask = (
+export const createTask = async (
   userId: string,
   name: string,
   description: string,
@@ -74,7 +74,7 @@ export const createTask = (
 ) => {
   const userTasksRef = ref(db, "users/" + userId);
   const newTaskRef = push(userTasksRef);
-  set(newTaskRef, {
+  await set(newTaskRef, {
     name,
     description,
     category: category.toLowerCase().trim(),

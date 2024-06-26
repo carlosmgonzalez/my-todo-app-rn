@@ -11,14 +11,6 @@ export default function ChangePasswordScreen() {
         paddingTop: 20,
         justifyContent: "space-between",
       }}
-    >
-      <Stack.Screen
-        options={{
-          title: "Change Password",
-          headerShadowVisible: false,
-          headerTitleAlign: "center",
-        }}
-      />
-    </View>
+    ></View>
   );
 }
