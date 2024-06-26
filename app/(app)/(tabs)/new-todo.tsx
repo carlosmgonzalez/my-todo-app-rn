@@ -1,32 +1,17 @@
+import { DatePicker, TimePicker } from "@/components";
 import { CategoryItem } from "@/components/CategoryItem";
 import { HeaderLeftBack } from "@/components/HeaderLeftBack";
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
-import { createTask } from "@/utils/firebaseConfig";
-import { formatDate } from "@/utils/formatDate";
-import { Ionicons } from "@expo/vector-icons";
-import {
-  DateTimePickerAndroid,
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
-
-import { Tabs, useRouter } from "expo-router";
+import { Category } from "@/interfaces/Category";
+import { createTask, getAllCategories } from "@/utils/firebaseConfig";
+import { mockCategories } from "@/utils/mockCategories";
+import { Link, Tabs, useRouter } from "expo-router";
 import { getAuth } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TextInput } from "react-native-paper";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-type AndroidMode = "date" | "time";
-const categoriesList = [
-  "Desarrollo",
-  "Diseño",
-  "Backend",
-  "Testing",
-  "Mantenimiento",
-  "DevOps",
-];
 
 export default function NewTodoScreen() {
   const router = useRouter();
@@ -36,35 +21,15 @@ export default function NewTodoScreen() {
 
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState<Category[] | undefined>([]);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [description, setDescription] = useState("");
 
+  useEffect(() => {
+    getAllCategories(userId, setCategories);
+  }, []);
+
   const disabledButton = !name || !category || !date;
-
-  const onChange = (
-    event: DateTimePickerEvent,
-    selectedDate: Date | undefined
-  ) => {
-    const currentDate = selectedDate;
-    setDate(currentDate);
-  };
-
-  const showMode = (currentMode: AndroidMode) => {
-    DateTimePickerAndroid.open({
-      value: date!,
-      onChange,
-      mode: currentMode,
-      is24Hour: true,
-    });
-  };
-
-  const showDatePicker = () => {
-    showMode("date");
-  };
-
-  const showTimerPicker = () => {
-    showMode("time");
-  };
 
   const onCreateTask = async () => {
     if (disabledButton) return;
@@ -80,15 +45,6 @@ export default function NewTodoScreen() {
 
   return (
     <View style={defaultStyles.container}>
-      <Tabs.Screen
-        options={{
-          title: "Create New Task",
-          headerTitleAlign: "center",
-          headerShadowVisible: false,
-          tabBarStyle: { display: "none" },
-          headerLeft: () => <HeaderLeftBack />,
-        }}
-      />
       <ScrollView>
         <View
           style={{
@@ -110,18 +66,37 @@ export default function NewTodoScreen() {
             />
           </View>
           <View style={styles.subContainer}>
-            <Text style={styles.subTitle}>Category</Text>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
+            >
+              <Text style={styles.subTitle}>Category</Text>
+              <Link
+                href="(app)/category-list"
+                style={{
+                  textDecorationLine: "underline",
+                  color: Colors.light.primaryColor,
+                  fontSize: 16,
+                }}
+              >
+                Edit
+              </Link>
+            </View>
+            {categories?.length === 0 && (
+              <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                Add a category
+              </Text>
+            )}
             <FlatList
               horizontal
-              data={categoriesList}
+              data={categories}
               renderItem={({ item }) => (
                 <CategoryItem
-                  item={item}
+                  item={item.name}
                   category={category}
                   setCategory={setCategory}
                 />
               )}
-              keyExtractor={(item) => item}
+              keyExtractor={(item) => item.id}
               ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
               showsHorizontalScrollIndicator={false}
             />
@@ -137,70 +112,8 @@ export default function NewTodoScreen() {
                 gap: 20,
               }}
             >
-              <View
-                style={{
-                  flex: 60,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  paddingVertical: 12,
-                  paddingHorizontal: 12,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: "#808080",
-                  height: 55,
-                }}
-              >
-                <Text>{date && formatDate(date)}</Text>
-                <TouchableOpacity
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "rgba(193, 218, 219, 0.5)",
-                    padding: 3,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => showDatePicker()}
-                >
-                  <Ionicons
-                    name="calendar-number-outline"
-                    size={23}
-                    color={Colors.light.darkPrimaryColor}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View
-                style={{
-                  flex: 40,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  paddingVertical: 12,
-                  paddingHorizontal: 12,
-                  borderRadius: 10,
-                  borderWidth: 1,
-                  borderColor: "#808080",
-                  height: 55,
-                }}
-              >
-                <Text>{date && date.toLocaleTimeString()}</Text>
-                <TouchableOpacity
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    backgroundColor: "rgba(193, 218, 219, 0.5)",
-                    padding: 3,
-                    borderRadius: 5,
-                  }}
-                  onPress={() => showTimerPicker()}
-                >
-                  <Ionicons
-                    name="chevron-down-outline"
-                    size={15}
-                    color={Colors.light.darkPrimaryColor}
-                  />
-                </TouchableOpacity>
-              </View>
+              <DatePicker date={date} setDate={setDate} />
+              <TimePicker date={date} setDate={setDate} />
             </View>
           </View>
           <View style={[styles.subContainer, { marginBottom: 25 }]}>

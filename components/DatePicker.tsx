@@ -1,5 +1,6 @@
 import Colors from "@/constants/Colors";
 import { AndroidMode } from "@/interfaces/pickerDateTimerAndroidMode";
+import { formatDate } from "@/utils/formatDate";
 import { Ionicons } from "@expo/vector-icons";
 import {
   DateTimePickerAndroid,
@@ -12,7 +13,7 @@ interface Props {
   date: Date | undefined;
 }
 
-export const TimePicker = ({ setDate, date }: Props) => {
+export const DatePicker = ({ setDate, date }: Props) => {
   const onChange = (
     event: DateTimePickerEvent,
     selectedDate: Date | undefined
@@ -29,14 +30,14 @@ export const TimePicker = ({ setDate, date }: Props) => {
     });
   };
 
-  const showTimerPicker = () => {
-    showMode("time");
+  const showDatePicker = () => {
+    showMode("date");
   };
 
   return (
     <View
       style={{
-        flex: 40,
+        flex: 60,
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
@@ -48,7 +49,7 @@ export const TimePicker = ({ setDate, date }: Props) => {
         height: 55,
       }}
     >
-      <Text>{date && date.toLocaleTimeString()}</Text>
+      <Text>{date && formatDate(date)}</Text>
       <TouchableOpacity
         style={{
           justifyContent: "center",
@@ -57,11 +58,11 @@ export const TimePicker = ({ setDate, date }: Props) => {
           padding: 3,
           borderRadius: 5,
         }}
-        onPress={() => showTimerPicker()}
+        onPress={() => showDatePicker()}
       >
         <Ionicons
-          name="chevron-down-outline"
-          size={15}
+          name="calendar-number-outline"
+          size={23}
           color={Colors.light.darkPrimaryColor}
         />
       </TouchableOpacity>

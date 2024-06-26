@@ -3,7 +3,7 @@ import { Task } from "@/interfaces/tasks.interface";
 import { formatDate, formatTime } from "@/utils/formatDate";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 export const TaskItem = ({ item }: { item: Task }) => {
   const router = useRouter();
@@ -16,21 +16,7 @@ export const TaskItem = ({ item }: { item: Task }) => {
           params: { id: item.id },
         })
       }
-      style={{
-        borderRadius: 18,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginVertical: 10,
-        marginHorizontal: 5,
-        padding: 10,
-        backgroundColor: "#fff",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 1,
-        elevation: 1.5,
-      }}
+      style={styles.button}
     >
       <View>
         <Text style={{ fontWeight: "500", fontSize: 16 }}>{item.name}</Text>
@@ -48,3 +34,21 @@ export const TaskItem = ({ item }: { item: Task }) => {
     </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    borderRadius: 18,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: 10,
+    marginHorizontal: 5,
+    padding: 10,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1.5,
+  },
+});

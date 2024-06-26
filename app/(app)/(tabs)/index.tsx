@@ -1,7 +1,4 @@
-import Colors from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
-import { FlatList, Pressable, StyleSheet } from "react-native";
+import { FlatList } from "react-native";
 import { Text, View } from "react-native";
 import { ProgressCard } from "@/components";
 import { useEffect, useState } from "react";
@@ -31,39 +28,6 @@ export default function TabOneScreen() {
 
   return (
     <View style={defaultStyles.container}>
-      <Tabs.Screen
-        options={{
-          title: "Homepage",
-          headerShadowVisible: false,
-          headerRight: () => (
-            <View
-              style={{
-                height: "100%",
-                alignItems: "center",
-                paddingRight: 10,
-                justifyContent: "center",
-              }}
-            >
-              <Pressable
-                style={({ pressed }) => ({
-                  padding: 5,
-                  borderRadius: pressed ? 10 : 0,
-                  backgroundColor: pressed
-                    ? Colors.light.backgroundLightGrey
-                    : "transparent",
-                })}
-              >
-                <Ionicons
-                  name="notifications-outline"
-                  size={30}
-                  color={Colors.light.grey}
-                />
-              </Pressable>
-            </View>
-          ),
-          headerTitleAlign: "center",
-        }}
-      />
       <ProgressCard tasks={allTasks} />
       <View style={{ marginTop: 20, flex: 1 }}>
         <Text style={{ fontWeight: "600", fontSize: 22 }}>Tasks</Text>
@@ -76,5 +40,3 @@ export default function TabOneScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({});

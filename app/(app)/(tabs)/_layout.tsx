@@ -1,23 +1,28 @@
-import { Tabs, useRouter } from "expo-router";
+import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
-import { TabBarButtonNewTodo } from "@/components";
+import {
+  HeaderLeftBack,
+  HeaderRightNotification,
+  TabBarButtonNewTodo,
+} from "@/components";
 
 export default function TabLayout() {
-  const router = useRouter();
-
   return (
     <View style={{ flex: 1 }}>
       <Tabs
         screenOptions={{
           tabBarShowLabel: false,
           tabBarHideOnKeyboard: true,
+          headerTitleAlign: "center",
+          headerShadowVisible: false,
         }}
       >
         <Tabs.Screen
           name="index"
           options={{
+            title: "Homepage",
             tabBarIcon: ({ focused }) => (
               <Ionicons
                 name="home-outline"
@@ -25,17 +30,22 @@ export default function TabLayout() {
                 color={focused ? "#000" : "#808080"}
               />
             ),
+            headerRight: () => <HeaderRightNotification />,
           }}
         />
         <Tabs.Screen
           name="new-todo"
           options={{
+            title: "New Task",
+            tabBarStyle: { display: "none" },
             tabBarButton: () => <TabBarButtonNewTodo />,
+            headerLeft: () => <HeaderLeftBack />,
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
+            title: "Profile",
             tabBarIcon: ({ focused }) => (
               <Ionicons
                 name="person-outline"

@@ -20,6 +20,7 @@ import {
 } from "firebase/database";
 import { Dispatch, SetStateAction } from "react";
 import { TaskDB, TaskResponse } from "@/interfaces/tasks.interface";
+import { Category } from "@/interfaces/Category";
 
 const reactNativePersistence = (firebaseAuth as any).getReactNativePersistence;
 
@@ -72,7 +73,7 @@ export const createTask = async (
   category: string,
   date: Date
 ) => {
-  const userTasksRef = ref(db, "users/" + userId);
+  const userTasksRef = ref(db, "users/" + userId + "/tasks");
   const newTaskRef = push(userTasksRef);
   await set(newTaskRef, {
     name,
@@ -87,7 +88,7 @@ export const getAllTasks = (
   userId: string,
   setTasks: Dispatch<SetStateAction<TaskResponse | undefined>>
 ) => {
-  const allTaskRef = ref(db, "users/" + userId);
+  const allTaskRef = ref(db, "users/" + userId + "/tasks");
   onValue(allTaskRef, (snapshot) => {
     if (snapshot.val()) {
       const tasks = snapshot.val();
@@ -101,7 +102,7 @@ export const getTaskById = (
   taskId: string,
   setTask: Dispatch<SetStateAction<TaskDB | undefined>>
 ) => {
-  const taskRef = ref(db, "users/" + userId + "/" + taskId);
+  const taskRef = ref(db, "users/" + userId + "/tasks/" + taskId);
   onValue(taskRef, (snapshot) => {
     if (snapshot.val()) {
       const task = snapshot.val();
@@ -111,7 +112,7 @@ export const getTaskById = (
 };
 
 export const toggleTaskDone = async (userId: string, taskId: string) => {
-  const taskRef = ref(db, "users/" + userId + "/" + taskId);
+  const taskRef = ref(db, "users/" + userId + "/tasks/" + taskId);
 
   try {
     const snapshot = await get(taskRef);
@@ -128,10 +129,49 @@ export const toggleTaskDone = async (userId: string, taskId: string) => {
 };
 
 export const deleteTask = async (userId: string, taskId: string) => {
-  const taskRef = ref(db, "users/" + userId + "/" + taskId);
+  const taskRef = ref(db, "users/" + userId + "/tasks/" + taskId);
 
   try {
     await remove(taskRef);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const createCategory = async (userId: string, name: string) => {
+  const categoryRef = ref(db, "users/" + userId + "/categories");
+  const newCategory = push(categoryRef);
+  await set(newCategory, {
+    name,
+  });
+};
+
+export const getAllCategories = async (
+  userId: string,
+  setCategories: Dispatch<SetStateAction<Category[] | undefined>>
+) => {
+  const allCategoriesRef = ref(db, "users/" + userId + "/categories");
+  onValue(allCategoriesRef, (snapshot) => {
+    if (snapshot.val()) {
+      const response = snapshot.val();
+      console.log(response);
+      const categories = Object.entries(response).map((category) => ({
+        id: category[0],
+        name: (category[1] as unknown as { name: string }).name,
+      })) as unknown as Category[];
+      if (categories.length === 0) setCategories([]);
+      setCategories(categories);
+    }
+  });
+};
+
+export const deleteCategory = async (userId: string, categoryId: string) => {
+  try {
+    const categoryRef = ref(
+      db,
+      "users/" + userId + "/categories/" + categoryId
+    );
+    await remove(categoryRef);
   } catch (error) {
     console.log(error);
   }

@@ -12,7 +12,7 @@ export const CategoryItem = ({ item, category, setCategory }: Props) => {
   return (
     <TouchableOpacity
       key={item}
-      onPress={() => setCategory(category)}
+      onPress={() => setCategory(item)}
       style={{
         paddingHorizontal: 16,
         paddingVertical: 12,
@@ -29,9 +29,10 @@ export const CategoryItem = ({ item, category, setCategory }: Props) => {
         style={{
           color: item === category ? "#fff" : "#000",
           fontWeight: "500",
+          fontSize: 13,
         }}
       >
-        {item}
+        {item.toLocaleUpperCase()}
       </Text>
     </TouchableOpacity>
   );

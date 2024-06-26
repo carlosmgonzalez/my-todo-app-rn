@@ -1,4 +1,3 @@
-import { HeaderButtonBack } from "@/components";
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
 import { TaskDB } from "@/interfaces/tasks.interface";
@@ -101,7 +100,7 @@ export default function TodoScreen() {
                 fontWeight: "500",
               }}
             >
-              {task?.category}
+              {task?.category.toLocaleUpperCase()}
             </Text>
           </View>
         </View>

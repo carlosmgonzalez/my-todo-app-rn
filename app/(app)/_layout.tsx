@@ -1,5 +1,3 @@
-import { View, Text } from "react-native";
-import React from "react";
 import { Stack } from "expo-router";
 
 export default function LayoutApp() {
@@ -19,6 +17,7 @@ export default function LayoutApp() {
       />
       <Stack.Screen
         name="[id]"
+        getId={({ params }) => String(Date.now())}
         options={{
           title: "Task Details",
         }}
@@ -33,6 +32,12 @@ export default function LayoutApp() {
         name="change-password"
         options={{
           title: "Change Password",
+        }}
+      />
+      <Stack.Screen
+        name="category-list"
+        options={{
+          title: "Category List",
         }}
       />
     </Stack>
