@@ -16,8 +16,11 @@ import {
 } from "@/utils/firebaseConfig";
 import { getAuth } from "firebase/auth";
 import { Category } from "@/interfaces/Category";
+import { useRouter } from "expo-router";
 
 export default function CategoryListScreen() {
+  const router = useRouter();
+
   const auth = getAuth();
   const user = auth.currentUser!;
   const userId = user.uid;
@@ -32,6 +35,7 @@ export default function CategoryListScreen() {
 
   const onDeleteCategory = async (categoryId: string) => {
     await deleteCategory(userId, categoryId);
+    if (categories?.length === 1) setCategories([]);
   };
 
   useEffect(() => {

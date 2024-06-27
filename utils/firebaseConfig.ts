@@ -154,7 +154,6 @@ export const getAllCategories = async (
   onValue(allCategoriesRef, (snapshot) => {
     if (snapshot.val()) {
       const response = snapshot.val();
-      console.log(response);
       const categories = Object.entries(response).map((category) => ({
         id: category[0],
         name: (category[1] as unknown as { name: string }).name,

@@ -8,7 +8,7 @@ import {
 } from "@/components";
 import { defaultStyles } from "@/constants/Styles";
 import { getAuth } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View } from "react-native";
 
 export default function ProfileScreen() {

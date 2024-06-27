@@ -1,10 +1,10 @@
+import { AlertMessage } from "@/components";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import {
   getAuth,
   sendEmailVerification,
-  updateEmail,
   updateProfile,
   verifyBeforeUpdateEmail,
 } from "firebase/auth";
@@ -32,23 +32,6 @@ export default function EditProfileScreen() {
     }
   };
 
-  const onUpdateEmail = async () => {
-    try {
-      await updateEmail(user, email);
-      console.log("email updated");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onVerifyEmail = async () => {
-    try {
-      await sendEmailVerification(user);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const onVerifyNewEmail = async () => {
     try {
       await verifyBeforeUpdateEmail(user, email);
@@ -59,8 +42,7 @@ export default function EditProfileScreen() {
 
   const onSave = async () => {
     await onUpdateFullname();
-    await onUpdateEmail();
-    router.push("(app)/(tabs)/profile");
+    router.replace("(app)/(tabs)/profile");
   };
 
   return (
@@ -73,65 +55,36 @@ export default function EditProfileScreen() {
         justifyContent: "space-between",
       }}
     >
-      <View style={{ gap: 20 }}>
-        <TextInput
-          onChangeText={setFullName}
-          placeholder=""
-          value={fullName}
-          mode="outlined"
-          label="Full name"
-          outlineStyle={{
-            borderColor: Colors.light.primaryColor,
-            borderRadius: 5,
-          }}
-        />
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            borderWidth: 1,
-            borderRadius: 10,
-            borderColor: "#f1f1f1",
-            padding: 5,
-          }}
-        >
-          <Text
-            style={{
-              flex: 1,
-              fontWeight: "500",
-              fontSize: 15,
-              textAlign: "center",
+      <View>
+        <AlertMessage message="To change the email you need to log out and log in again." />
+        <View style={{ gap: 15 }}>
+          <TextInput
+            onChangeText={setFullName}
+            placeholder=""
+            value={fullName}
+            mode="outlined"
+            label="Full name"
+            outlineStyle={{
+              borderColor: Colors.light.primaryColor,
+              borderRadius: 5,
             }}
-          >
-            {user.emailVerified ? "Verified Email" : "Unverified Email"}
-          </Text>
-          {!user.emailVerified && (
-            <TouchableOpacity
-              style={[styles.button, { flex: 1 }]}
-              onPress={onVerifyEmail}
-            >
-              <Ionicons name="mail-outline" size={30} color="1dbf00" />
-              <Text style={{ fontWeight: "500" }}>Verify Email</Text>
-            </TouchableOpacity>
-          )}
+          />
+          <TextInput
+            onChangeText={setEmail}
+            placeholder=""
+            value={email}
+            mode="outlined"
+            label="Email"
+            outlineStyle={{
+              borderColor: Colors.light.primaryColor,
+              borderRadius: 5,
+            }}
+          />
+          <TouchableOpacity style={styles.button} onPress={onVerifyNewEmail}>
+            <Ionicons name="mail-outline" size={30} color="1dbf00" />
+            <Text style={{ fontWeight: "500" }}>Verify New Email & Change</Text>
+          </TouchableOpacity>
         </View>
-        <TextInput
-          onChangeText={setEmail}
-          placeholder=""
-          value={email}
-          mode="outlined"
-          label="Email"
-          outlineStyle={{
-            borderColor: Colors.light.primaryColor,
-            borderRadius: 5,
-          }}
-        />
-        <TouchableOpacity style={styles.button} onPress={onVerifyNewEmail}>
-          <Ionicons name="mail-outline" size={30} color="1dbf00" />
-          <Text style={{ fontWeight: "500" }}>Verify New Email & Change</Text>
-        </TouchableOpacity>
       </View>
       <View>
         <TouchableOpacity

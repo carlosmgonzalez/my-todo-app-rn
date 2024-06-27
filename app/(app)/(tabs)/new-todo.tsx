@@ -9,7 +9,15 @@ import { mockCategories } from "@/utils/mockCategories";
 import { Link, Tabs, useRouter } from "expo-router";
 import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { TextInput } from "react-native-paper";
 
@@ -45,13 +53,8 @@ export default function NewTodoScreen() {
 
   return (
     <View style={defaultStyles.container}>
-      <ScrollView>
-        <View
-          style={{
-            flex: 1,
-            gap: 30,
-          }}
-        >
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ gap: 20 }}>
           <View style={styles.subContainer}>
             <Text style={styles.subTitle}>Task Name</Text>
             <TextInput
@@ -116,7 +119,7 @@ export default function NewTodoScreen() {
               <TimePicker date={date} setDate={setDate} />
             </View>
           </View>
-          <View style={[styles.subContainer, { marginBottom: 25 }]}>
+          <View style={[styles.subContainer, { marginBottom: 25, flex: 1 }]}>
             <Text style={styles.subTitle}>Description</Text>
             <TextInput
               mode="outlined"
@@ -127,6 +130,7 @@ export default function NewTodoScreen() {
                 borderRadius: 10,
               }}
               multiline
+              scrollEnabled
               style={{ paddingVertical: 15 }}
             />
           </View>
@@ -142,7 +146,7 @@ export default function NewTodoScreen() {
           borderRadius: 15,
           justifyContent: "center",
           alignItems: "center",
-          marginBottom: 10,
+          marginTop: 15,
         }}
         onPress={onCreateTask}
         disabled={disabledButton}

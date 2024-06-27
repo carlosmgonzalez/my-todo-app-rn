@@ -1,4 +1,9 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
@@ -20,6 +25,8 @@ export const EditImageButton = ({
 }: {
   setPhotoUrl: Dispatch<SetStateAction<string | null | undefined>>;
 }) => {
+  const { width, height } = useWindowDimensions();
+
   const storage = getStorage();
   const auth = getAuth();
   const userUid = auth.currentUser!.uid;
@@ -41,7 +48,6 @@ export const EditImageButton = ({
     const fileExtension = result.assets[0].uri.split(".").at(-1);
     const fileName = `${Date.now()}.${fileExtension}`;
 
-    // const existUserPhoto = ref(storage, "userPhoto/" + userUid);
     const existUserPhoto = ref(storage, "userPhoto/" + userUid);
     const list = await listAll(existUserPhoto);
     if (list.items.length !== 0) {
@@ -79,7 +85,7 @@ export const EditImageButton = ({
         alignItems: "center",
         position: "absolute",
         bottom: 10,
-        right: 100,
+        left: width / 2 + 30,
       }}
     >
       <Ionicons

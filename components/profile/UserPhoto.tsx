@@ -19,9 +19,9 @@ export const UserPhoto = ({ setPhotoUrl, photoUrl }: Props) => {
     >
       <View
         style={{
-          borderRadius: 100,
           width: 200,
           height: 200,
+          borderRadius: 100,
           justifyContent: "center",
           alignItems: "center",
           borderWidth: 3,
@@ -30,13 +30,14 @@ export const UserPhoto = ({ setPhotoUrl, photoUrl }: Props) => {
       >
         <View
           style={{
+            width: "100%",
+            height: "100%",
             borderRadius: 100,
-            backgroundColor: "#d4d4d4",
-            overflow: "hidden",
-            flex: 1,
             justifyContent: "center",
             alignItems: "center",
-            borderWidth: 5,
+            backgroundColor: "#d4d4d4",
+            borderWidth: 3,
+            overflow: "hidden",
             borderColor: "#fff",
           }}
         >
