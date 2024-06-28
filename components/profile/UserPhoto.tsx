@@ -1,7 +1,6 @@
-import { View, Text, Image } from "react-native";
-import React from "react";
-import Colors from "@/constants/Colors";
+import { View, Image } from "react-native";
 import { EditImageButton } from "./EditImageButton";
+import Colors from "@/constants/Colors";
 
 interface Props {
   setPhotoUrl: React.Dispatch<React.SetStateAction<string | undefined | null>>;
@@ -25,7 +24,7 @@ export const UserPhoto = ({ setPhotoUrl, photoUrl }: Props) => {
           justifyContent: "center",
           alignItems: "center",
           borderWidth: 3,
-          borderColor: Colors.light.primaryColor,
+          borderColor: Colors.primaryColor,
         }}
       >
         <View

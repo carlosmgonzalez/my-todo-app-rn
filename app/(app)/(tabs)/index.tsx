@@ -2,11 +2,11 @@ import { FlatList } from "react-native";
 import { Text, View } from "react-native";
 import { ProgressCard } from "@/components";
 import { useEffect, useState } from "react";
-import { getAllTasks } from "@/utils/firebaseConfig";
 import { getAuth } from "firebase/auth";
-import { TaskResponse } from "@/interfaces/tasks.interface";
 import { TaskItem } from "@/components/TaskItem";
 import { defaultStyles } from "@/constants/Styles";
+import { TaskResponse } from "@/interfaces";
+import { getAllTasks } from "@/services/task";
 
 export default function TabOneScreen() {
   const auth = getAuth();

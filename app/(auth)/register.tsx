@@ -5,12 +5,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useState } from "react";
-import { handleRegister } from "@/utils/firebaseConfig";
 import { Link } from "expo-router";
 import Colors from "@/constants/Colors";
+import { register } from "@/services/auth";
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState("");
@@ -21,7 +22,11 @@ export default function RegisterScreen() {
 
   const onPress = async () => {
     if (password !== confirmPassword || password.length === 0) return;
-    await handleRegister(email, password);
+    try {
+      await register(email, password);
+    } catch (error) {
+      ToastAndroid.show("Incorrect credentials", ToastAndroid.LONG);
+    }
   };
 
   return (
@@ -69,7 +74,7 @@ export default function RegisterScreen() {
             mode="outlined"
             label="Email"
             outlineStyle={{
-              borderColor: Colors.light.primaryColor,
+              borderColor: Colors.primaryColor,
               borderRadius: 5,
             }}
           />
@@ -80,7 +85,7 @@ export default function RegisterScreen() {
             mode="outlined"
             label="Password"
             outlineStyle={{
-              borderColor: Colors.light.primaryColor,
+              borderColor: Colors.primaryColor,
               borderRadius: 5,
             }}
             secureTextEntry={hiddenPassword}
@@ -98,7 +103,7 @@ export default function RegisterScreen() {
             mode="outlined"
             label="Confirm password"
             outlineStyle={{
-              borderColor: Colors.light.primaryColor,
+              borderColor: Colors.primaryColor,
               borderRadius: 5,
             }}
             secureTextEntry={hiddenConfirmPassword}
@@ -124,7 +129,7 @@ export default function RegisterScreen() {
               width: "100%",
               paddingHorizontal: 20,
               paddingVertical: 10,
-              backgroundColor: Colors.light.primaryColor,
+              backgroundColor: Colors.primaryColor,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10,
@@ -141,7 +146,7 @@ export default function RegisterScreen() {
           <Link href="/(auth)/login">
             <Text
               style={{
-                color: Colors.light.darkPrimaryColor,
+                color: Colors.darkPrimaryColor,
                 fontWeight: "600",
               }}
             >

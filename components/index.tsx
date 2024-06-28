@@ -1,13 +1,15 @@
 export * from "./ProgressCard";
 export * from "./HeaderButtonBack";
 export * from "./HeaderLeftBack";
-export * from "./profile/EditImageButton";
 export * from "./TaskItem";
 export * from "./Themed";
 export * from "./TabBarButtonNewTodo";
 export * from "./TimePicker";
 export * from "./DatePicker";
 export * from "./HeaderRightNotification";
+export * from "./CategoryItem"
+
+export * from "./profile/EditImageButton";
 export * from "./profile/UserPhoto";
 export * from "./profile/EditProfileButton";
 export * from "./profile/ChangePasswordButton";

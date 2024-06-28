@@ -1,17 +1,16 @@
 import {
   View,
   Text,
-  StyleSheet,
   Image,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useState } from "react";
-import { handleLogin } from "@/utils/firebaseConfig";
 import { Link } from "expo-router";
-import { Button } from "react-native-paper";
+import { login } from "@/services/auth";
 import Colors from "@/constants/Colors";
 
 export default function LoginScreen() {
@@ -19,7 +18,11 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const onPress = async () => {
-    await handleLogin(email, password);
+    try {
+      await login(email, password);
+    } catch (error) {
+      ToastAndroid.show("Invalid email or password", ToastAndroid.LONG);
+    }
   };
 
   return (
@@ -72,7 +75,7 @@ export default function LoginScreen() {
             mode="outlined"
             label="Email"
             outlineStyle={{
-              borderColor: Colors.light.primaryColor,
+              borderColor: Colors.primaryColor,
               borderRadius: 5,
             }}
           />
@@ -83,7 +86,7 @@ export default function LoginScreen() {
             mode="outlined"
             label="Password"
             outlineStyle={{
-              borderColor: Colors.light.primaryColor,
+              borderColor: Colors.primaryColor,
               borderRadius: 5,
             }}
             secureTextEntry
@@ -103,7 +106,7 @@ export default function LoginScreen() {
               width: "100%",
               paddingHorizontal: 20,
               paddingVertical: 10,
-              backgroundColor: Colors.light.primaryColor,
+              backgroundColor: Colors.primaryColor,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10,
@@ -117,7 +120,7 @@ export default function LoginScreen() {
           <Link href="/(auth)/register">
             <Text
               style={{
-                color: Colors.light.darkPrimaryColor,
+                color: Colors.darkPrimaryColor,
                 fontWeight: "600",
               }}
             >
@@ -128,28 +131,4 @@ export default function LoginScreen() {
       </View>
     </KeyboardAvoidingView>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "white",
-    padding: 20,
-  },
-});
-
-{
-  /* <ScrollView>
-        <View
-          style={{
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: 10,
-            height: heightScreen,
-          }}
-        >
-        </View>
-      </ScrollView> */
 }

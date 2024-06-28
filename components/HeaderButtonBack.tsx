@@ -1,8 +1,7 @@
 import { View, TouchableOpacity } from "react-native";
-import React from "react";
 import { useRouter } from "expo-router";
-import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import Colors from "@/constants/Colors";
 
 export const HeaderButtonBack = ({ route }: { route: string }) => {
   const router = useRouter();
@@ -12,7 +11,7 @@ export const HeaderButtonBack = ({ route }: { route: string }) => {
       style={{
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: Colors.light.backgroundLightGrey,
+        backgroundColor: Colors.backgroundLightGrey,
         width: 40,
         height: 40,
         // margin: 10,
@@ -21,11 +20,7 @@ export const HeaderButtonBack = ({ route }: { route: string }) => {
       }}
     >
       <TouchableOpacity onPress={() => router.replace(route)}>
-        <Ionicons
-          name="chevron-back-outline"
-          size={30}
-          color={Colors.light.grey}
-        />
+        <Ionicons name="chevron-back-outline" size={30} color={Colors.grey} />
       </TouchableOpacity>
     </View>
   );

@@ -1,11 +1,12 @@
 import "react-native-reanimated";
+import "@/firebase/firebaseConfig";
+
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
-import Colors from "@/constants/Colors";
 export { ErrorBoundary } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
@@ -38,9 +39,6 @@ export default function RootLayout() {
 
   return <RootLayoutNav />;
 }
-
-const primaryColor = Colors.light.primaryColor;
-const secondaryColor = Colors.light.secondaryColor;
 
 const theme = {
   ...DefaultTheme,

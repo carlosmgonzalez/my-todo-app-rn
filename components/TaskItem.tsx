@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors";
-import { Task } from "@/interfaces/tasks.interface";
+import { Task } from "@/interfaces";
 import { formatDate, formatTime } from "@/utils/formatDate";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -18,8 +18,16 @@ export const TaskItem = ({ item }: { item: Task }) => {
       }
       style={styles.button}
     >
-      <View>
-        <Text style={{ fontWeight: "500", fontSize: 16 }}>{item.name}</Text>
+      <View style={{ gap: 2 }}>
+        <Text
+          style={{
+            fontWeight: "500",
+            fontSize: 16,
+            textDecorationLine: item.done ? "line-through" : "none",
+          }}
+        >
+          {item.name}
+        </Text>
         <Text>
           {formatTime(item.date)} hrs - {formatDate(item.date)}
         </Text>
@@ -28,7 +36,7 @@ export const TaskItem = ({ item }: { item: Task }) => {
         <Ionicons
           name="chevron-forward-outline"
           size={28}
-          color={Colors.light.grey}
+          color={Colors.grey}
         />
       </View>
     </TouchableOpacity>
@@ -37,11 +45,11 @@ export const TaskItem = ({ item }: { item: Task }) => {
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 18,
+    borderRadius: 12,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginVertical: 10,
+    marginVertical: 6,
     marginHorizontal: 5,
     padding: 10,
     backgroundColor: "#fff",

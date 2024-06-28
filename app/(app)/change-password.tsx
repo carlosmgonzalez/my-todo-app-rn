@@ -1,9 +1,7 @@
 import { AlertMessage } from "@/components";
 import Colors from "@/constants/Colors";
-import { Ionicons } from "@expo/vector-icons";
-import { Stack } from "expo-router";
 import { useState } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ToastAndroid } from "react-native";
 import { TextInput } from "react-native-paper";
 import { getAuth, updatePassword } from "firebase/auth";
 
@@ -16,15 +14,14 @@ export default function ChangePasswordScreen() {
   const auth = getAuth();
   const user = auth.currentUser!;
 
-  const onChangePassword = () => {
+  const onChangePassword = async () => {
     if (password !== confirmPassword || password.length === 0) return;
-    updatePassword(user, password)
-      .then(() => {
-        console.log("Password changed successfully");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      await updatePassword(user, password);
+      ToastAndroid.show("Updated password successfully", ToastAndroid.LONG);
+    } catch (error) {
+      ToastAndroid.show("Something went wrong", ToastAndroid.LONG);
+    }
   };
 
   return (
@@ -46,7 +43,7 @@ export default function ChangePasswordScreen() {
           mode="outlined"
           label="Password"
           outlineStyle={{
-            borderColor: Colors.light.primaryColor,
+            borderColor: Colors.primaryColor,
             borderRadius: 5,
           }}
           secureTextEntry={hiddenPassword}
@@ -64,7 +61,7 @@ export default function ChangePasswordScreen() {
           mode="outlined"
           label="Confirm password"
           outlineStyle={{
-            borderColor: Colors.light.primaryColor,
+            borderColor: Colors.primaryColor,
             borderRadius: 5,
           }}
           secureTextEntry={hiddenConfirmPassword}
@@ -81,7 +78,7 @@ export default function ChangePasswordScreen() {
           style={{
             width: "100%",
             paddingVertical: 15,
-            backgroundColor: Colors.light.primaryColor,
+            backgroundColor: Colors.primaryColor,
             borderRadius: 15,
             justifyContent: "center",
             alignItems: "center",

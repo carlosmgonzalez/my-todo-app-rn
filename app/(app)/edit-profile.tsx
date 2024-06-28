@@ -1,15 +1,12 @@
 import { AlertMessage } from "@/components";
 import Colors from "@/constants/Colors";
+import { defaultStyles } from "@/constants/Styles";
+import { updateDisplayName, verifyNewEmail } from "@/services/profile";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import {
-  getAuth,
-  sendEmailVerification,
-  updateProfile,
-  verifyBeforeUpdateEmail,
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, ToastAndroid } from "react-native";
 import { TextInput } from "react-native-paper";
 
 export default function EditProfileScreen() {
@@ -18,30 +15,31 @@ export default function EditProfileScreen() {
   const auth = getAuth();
   const user = auth.currentUser!;
 
-  const [fullName, setFullName] = useState(
+  const [displayName, setDisplayName] = useState(
     user?.displayName ? user.displayName : "No name"
   );
-
   const [email, setEmail] = useState(user!.email!);
 
-  const onUpdateFullname = async () => {
+  const onUpdateDisplayName = async () => {
     try {
-      await updateProfile(user, { displayName: fullName });
+      await updateDisplayName(user, displayName);
+      ToastAndroid.show("Updated display name successfully", ToastAndroid.LONG);
     } catch (error) {
-      console.log(error);
+      ToastAndroid.show("Something went wrong", ToastAndroid.LONG);
     }
   };
 
   const onVerifyNewEmail = async () => {
     try {
-      await verifyBeforeUpdateEmail(user, email);
+      await verifyNewEmail(user, email);
+      ToastAndroid.show("Email sent to verify", ToastAndroid.LONG);
     } catch (error) {
-      console.log(error);
+      ToastAndroid.show("Something went wrong", ToastAndroid.LONG);
     }
   };
 
   const onSave = async () => {
-    await onUpdateFullname();
+    await onUpdateDisplayName();
     router.replace("(app)/(tabs)/profile");
   };
 
@@ -59,13 +57,13 @@ export default function EditProfileScreen() {
         <AlertMessage message="To change the email you need to log out and log in again." />
         <View style={{ gap: 15 }}>
           <TextInput
-            onChangeText={setFullName}
+            onChangeText={setDisplayName}
             placeholder=""
-            value={fullName}
+            value={displayName}
             mode="outlined"
             label="Full name"
             outlineStyle={{
-              borderColor: Colors.light.primaryColor,
+              borderColor: Colors.primaryColor,
               borderRadius: 5,
             }}
           />
@@ -76,11 +74,14 @@ export default function EditProfileScreen() {
             mode="outlined"
             label="Email"
             outlineStyle={{
-              borderColor: Colors.light.primaryColor,
+              borderColor: Colors.primaryColor,
               borderRadius: 5,
             }}
           />
-          <TouchableOpacity style={styles.button} onPress={onVerifyNewEmail}>
+          <TouchableOpacity
+            style={defaultStyles.buttonShadow}
+            onPress={onVerifyNewEmail}
+          >
             <Ionicons name="mail-outline" size={30} color="1dbf00" />
             <Text style={{ fontWeight: "500" }}>Verify New Email & Change</Text>
           </TouchableOpacity>
@@ -91,7 +92,7 @@ export default function EditProfileScreen() {
           style={{
             width: "100%",
             paddingVertical: 15,
-            backgroundColor: Colors.light.primaryColor,
+            backgroundColor: Colors.primaryColor,
             borderRadius: 15,
             justifyContent: "center",
             alignItems: "center",
@@ -113,21 +114,3 @@ export default function EditProfileScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    flexDirection: "row",
-    gap: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 1.5,
-  },
-});

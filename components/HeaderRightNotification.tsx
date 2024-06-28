@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Pressable } from "react-native";
 import React from "react";
 import Colors from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,16 +17,10 @@ export const HeaderRightNotification = () => {
         style={({ pressed }) => ({
           padding: 5,
           borderRadius: pressed ? 10 : 0,
-          backgroundColor: pressed
-            ? Colors.light.backgroundLightGrey
-            : "transparent",
+          backgroundColor: pressed ? Colors.backgroundLightGrey : "transparent",
         })}
       >
-        <Ionicons
-          name="notifications-outline"
-          size={30}
-          color={Colors.light.grey}
-        />
+        <Ionicons name="notifications-outline" size={30} color={Colors.grey} />
       </Pressable>
     </View>
   );

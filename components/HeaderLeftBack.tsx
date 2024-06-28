@@ -29,11 +29,7 @@ export const HeaderLeftBack = () => {
           borderRadius: pressed ? 100 : 0,
         })}
       >
-        <Ionicons
-          name="arrow-back-outline"
-          size={25}
-          color={Colors.light.grey}
-        />
+        <Ionicons name="arrow-back-outline" size={25} color={Colors.grey} />
       </Pressable>
     </View>
   );

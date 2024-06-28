@@ -8,19 +8,16 @@ import {
 import React, { useEffect, useState } from "react";
 import { defaultStyles } from "@/constants/Styles";
 import { Ionicons } from "@expo/vector-icons";
-import Colors from "@/constants/Colors";
+import { getAuth } from "firebase/auth";
+import { Category } from "@/interfaces/category";
 import {
   createCategory,
   deleteCategory,
   getAllCategories,
-} from "@/utils/firebaseConfig";
-import { getAuth } from "firebase/auth";
-import { Category } from "@/interfaces/Category";
-import { useRouter } from "expo-router";
+} from "@/services/category";
+import Colors from "@/constants/Colors";
 
 export default function CategoryListScreen() {
-  const router = useRouter();
-
   const auth = getAuth();
   const user = auth.currentUser!;
   const userId = user.uid;
@@ -29,13 +26,21 @@ export default function CategoryListScreen() {
   const [categories, setCategories] = useState<Category[] | undefined>([]);
 
   const onCreateCategory = async () => {
-    await createCategory(userId, newCategory.toLowerCase().trim());
-    setNewCategory("");
+    try {
+      await createCategory(userId, newCategory.toLowerCase().trim());
+      setNewCategory("");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onDeleteCategory = async (categoryId: string) => {
-    await deleteCategory(userId, categoryId);
-    if (categories?.length === 1) setCategories([]);
+    try {
+      await deleteCategory(userId, categoryId);
+      if (categories?.length === 1) setCategories([]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -74,7 +79,7 @@ export default function CategoryListScreen() {
             width: 55,
             height: 55,
             borderRadius: 15,
-            backgroundColor: Colors.light.primaryColor,
+            backgroundColor: Colors.primaryColor,
             opacity: !newCategory ? 0.5 : 1,
           }}
           onPress={onCreateCategory}

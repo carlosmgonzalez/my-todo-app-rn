@@ -15,7 +15,7 @@ export const TabBarButtonNewTodo = () => {
         width: 50,
         height: 50,
         borderRadius: 100,
-        backgroundColor: Colors.light.primaryColor,
+        backgroundColor: Colors.primaryColor,
         justifyContent: "center",
         alignItems: "center",
         bottom: 25,

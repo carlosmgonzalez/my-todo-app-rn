@@ -1,25 +1,22 @@
-import { DatePicker, TimePicker } from "@/components";
-import { CategoryItem } from "@/components/CategoryItem";
-import { HeaderLeftBack } from "@/components/HeaderLeftBack";
-import Colors from "@/constants/Colors";
-import { defaultStyles } from "@/constants/Styles";
-import { Category } from "@/interfaces/Category";
-import { createTask, getAllCategories } from "@/utils/firebaseConfig";
-import { mockCategories } from "@/utils/mockCategories";
-import { Link, Tabs, useRouter } from "expo-router";
-import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { DatePicker, TimePicker, CategoryItem } from "@/components";
+import { defaultStyles } from "@/constants/Styles";
+import { Category } from "@/interfaces";
+import { getAllCategories } from "@/services/category";
+import { createTask } from "@/services/task";
+import { Link, useRouter } from "expo-router";
+import { getAuth } from "firebase/auth";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   ScrollView,
-  KeyboardAvoidingView,
-  Platform,
+  ToastAndroid,
+  TouchableOpacity,
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import { TextInput } from "react-native-paper";
+import Colors from "@/constants/Colors";
 
 export default function NewTodoScreen() {
   const router = useRouter();
@@ -42,13 +39,17 @@ export default function NewTodoScreen() {
   const onCreateTask = async () => {
     if (disabledButton) return;
 
-    await createTask(userId, name, description, category, date);
+    try {
+      await createTask(userId, name, description, category, date);
 
-    setName("");
-    setDescription("");
-    setCategory("");
+      setName("");
+      setDescription("");
+      setCategory("");
 
-    router.push("(app)/(tabs)");
+      router.push("(app)/(tabs)");
+    } catch (error) {
+      ToastAndroid.show("Something went wrong", ToastAndroid.SHORT);
+    }
   };
 
   return (
@@ -77,7 +78,7 @@ export default function NewTodoScreen() {
                 href="(app)/category-list"
                 style={{
                   textDecorationLine: "underline",
-                  color: Colors.light.primaryColor,
+                  color: Colors.primaryColor,
                   fontSize: 16,
                 }}
               >
@@ -141,8 +142,8 @@ export default function NewTodoScreen() {
           width: "100%",
           paddingVertical: 15,
           backgroundColor: disabledButton
-            ? Colors.light.primaryColorOpacity
-            : Colors.light.primaryColor,
+            ? Colors.primaryColorOpacity
+            : Colors.primaryColor,
           borderRadius: 15,
           justifyContent: "center",
           alignItems: "center",
@@ -173,5 +174,4 @@ const styles = StyleSheet.create({
   subContainer: {
     gap: 10,
   },
-  input: {},
 });

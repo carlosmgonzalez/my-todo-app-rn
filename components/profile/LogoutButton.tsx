@@ -1,8 +1,8 @@
+import { logout } from "@/services/auth";
 import { Ionicons } from "@expo/vector-icons";
-import { Auth } from "firebase/auth";
 import { View, Text, TouchableOpacity } from "react-native";
 
-export const LogoutButton = ({ auth }: { auth: Auth }) => {
+export const LogoutButton = () => {
   return (
     <TouchableOpacity
       style={{
@@ -11,7 +11,7 @@ export const LogoutButton = ({ auth }: { auth: Auth }) => {
         alignItems: "center",
         paddingVertical: 10,
       }}
-      onPress={() => auth.signOut()}
+      onPress={() => logout()}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
         <Ionicons name="log-out-outline" size={30} color="#bf0000" />

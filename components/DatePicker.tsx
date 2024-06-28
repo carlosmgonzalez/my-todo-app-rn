@@ -63,7 +63,7 @@ export const DatePicker = ({ setDate, date }: Props) => {
         <Ionicons
           name="calendar-number-outline"
           size={23}
-          color={Colors.light.darkPrimaryColor}
+          color={Colors.darkPrimaryColor}
         />
       </TouchableOpacity>
     </View>

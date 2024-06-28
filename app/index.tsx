@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import { auth } from "@/utils/firebaseConfig";
 
 export default function InitialScreen() {
   const router = useRouter();

@@ -88,11 +88,7 @@ export const EditImageButton = ({
         left: width / 2 + 30,
       }}
     >
-      <Ionicons
-        name="pencil-outline"
-        size={30}
-        color={Colors.light.primaryColor}
-      />
+      <Ionicons name="pencil-outline" size={30} color={Colors.primaryColor} />
     </TouchableOpacity>
   );
 };

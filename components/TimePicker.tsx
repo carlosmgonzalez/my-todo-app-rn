@@ -62,7 +62,7 @@ export const TimePicker = ({ setDate, date }: Props) => {
         <Ionicons
           name="chevron-down-outline"
           size={15}
-          color={Colors.light.darkPrimaryColor}
+          color={Colors.darkPrimaryColor}
         />
       </TouchableOpacity>
     </View>

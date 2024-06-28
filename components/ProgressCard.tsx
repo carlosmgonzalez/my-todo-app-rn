@@ -1,8 +1,7 @@
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "@/constants/Colors";
-import { Task } from "@/interfaces/tasks.interface";
+import { Task } from "@/interfaces";
 
 export const ProgressCard = ({ tasks }: { tasks: Task[] }) => {
   const taskDone = tasks.reduce((acc, val) => {
@@ -18,12 +17,12 @@ export const ProgressCard = ({ tasks }: { tasks: Task[] }) => {
       style={{
         padding: 20,
         borderRadius: 18,
-        height: 170,
+        height: 150,
         justifyContent: "space-between",
       }}
     >
       <LinearGradient
-        colors={[Colors.light.primaryColor, Colors.light.secondaryColor]}
+        colors={[Colors.primaryColor, Colors.secondaryColor]}
         style={{
           position: "absolute",
           left: 0,
@@ -33,7 +32,13 @@ export const ProgressCard = ({ tasks }: { tasks: Task[] }) => {
           borderRadius: 18,
         }}
       />
-      <View style={{ gap: 10 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Text
           style={{
             fontWeight: "500",
@@ -66,7 +71,7 @@ export const ProgressCard = ({ tasks }: { tasks: Task[] }) => {
               justifyContent: "space-between",
             }}
           >
-            <Text style={{ color: "#fff" }}>Progress</Text>
+            <Text style={{ color: "#fff", fontWeight: "500" }}>Progress</Text>
             <Text style={{ color: "#fff" }}>{progress}%</Text>
           </View>
           <View style={{ width: "100%", top: 10 }}>

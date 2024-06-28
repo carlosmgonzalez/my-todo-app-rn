@@ -1,5 +1,4 @@
 import { Text, TouchableOpacity } from "react-native";
-import React from "react";
 import Colors from "@/constants/Colors";
 
 interface Props {
@@ -17,9 +16,7 @@ export const CategoryItem = ({ item, category, setCategory }: Props) => {
         paddingHorizontal: 16,
         paddingVertical: 12,
         backgroundColor:
-          item === category
-            ? Colors.light.primaryColor
-            : "rgba(193, 218, 219, 0.5)",
+          item === category ? Colors.primaryColor : "rgba(193, 218, 219, 0.5)",
         justifyContent: "center",
         alignItems: "center",
         borderRadius: 10,

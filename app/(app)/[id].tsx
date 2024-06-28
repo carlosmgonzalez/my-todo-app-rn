@@ -1,11 +1,7 @@
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
-import { TaskDB } from "@/interfaces/tasks.interface";
-import {
-  deleteTask,
-  getTaskById,
-  toggleTaskDone,
-} from "@/utils/firebaseConfig";
+import { TaskDB } from "@/interfaces";
+import { deleteTaskById, getTaskById, toggleTaskDone } from "@/services/task";
 import { formatDate, formatTime } from "@/utils/formatDate";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -24,16 +20,24 @@ export default function TodoScreen() {
   const [task, setTask] = useState<TaskDB | undefined>();
 
   const onDeleteTask = async () => {
-    await deleteTask(userId, taskId);
-    router.push("(app)/(tabs)");
+    try {
+      await deleteTaskById(userId, taskId);
+      router.push("(app)/(tabs)");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onToggleTaskDone = async () => {
-    await toggleTaskDone(userId, taskId);
+    try {
+      await toggleTaskDone(userId, taskId);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    getTaskById(userId!, taskId, setTask);
+    getTaskById(userId, taskId, setTask);
   }, []);
 
   return (
@@ -74,7 +78,7 @@ export default function TodoScreen() {
             <Ionicons
               name="calendar-outline"
               size={30}
-              color={Colors.light.primaryColor}
+              color={Colors.primaryColor}
             />
           </View>
           <Text style={{ fontSize: 18, color: "#000" }}>
@@ -88,7 +92,7 @@ export default function TodoScreen() {
             style={{
               paddingHorizontal: 16,
               paddingVertical: 12,
-              backgroundColor: Colors.light.primaryColor,
+              backgroundColor: Colors.primaryColor,
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 10,
