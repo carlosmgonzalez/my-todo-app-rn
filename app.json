@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "todoAppRnFs",
+    "name": "Todo",
     "slug": "todoAppRnFs",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,7 +13,8 @@
       "backgroundColor": "#119DA4"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.carlosmgonzalez.todoAppRnFs"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +23,8 @@
       },
       "permissions": [
         "android.permission.RECORD_AUDIO"
-      ]
+      ],
+      "package": "com.carlosmgonzalez.todoAppRnFs"
     },
     "web": {
       "bundler": "metro",
