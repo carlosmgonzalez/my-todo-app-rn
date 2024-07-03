@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { ActivityIndicator, View } from "react-native";
+import Colors from "@/constants/Colors";
+import { StatusBar } from "expo-status-bar";
 
 export default function InitialScreen() {
   const router = useRouter();
@@ -15,4 +18,6 @@ export default function InitialScreen() {
       }
     });
   }, [auth]);
+
+  return null;
 }

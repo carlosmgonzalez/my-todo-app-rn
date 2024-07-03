@@ -55,10 +55,14 @@ function RootLayoutNav() {
   return (
     <GestureHandlerRootView>
       <PaperProvider theme={theme}>
-        <Stack>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
           <Stack.Screen name="index" options={{}} />
-          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-          <Stack.Screen name="(app)" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{}} />
+          <Stack.Screen name="(app)" options={{}} />
         </Stack>
         <StatusBar style="dark" backgroundColor="#fff" />
       </PaperProvider>
