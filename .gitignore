@@ -18,6 +18,7 @@ web-build/
 android/*
 ios/*
 eas.json
+google-services.json
 
 # Metro
 .metro-health-check*

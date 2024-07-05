@@ -40,6 +40,12 @@ export default function LayoutApp() {
           title: "Category List",
         }}
       />
+      <Stack.Screen
+        name="notification"
+        options={{
+          title: "Notifications",
+        }}
+      />
     </Stack>
   );
 }
