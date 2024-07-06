@@ -117,7 +117,14 @@ export const Notification = () => {
   }, []);
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#fff",
+      }}
+    >
       <Text style={{ fontWeight: "500" }}>Your Expo push token:</Text>
       <Text style={{}}>{expoPushToken}</Text>
     </View>
