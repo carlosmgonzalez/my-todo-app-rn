@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-paper";
 import Colors from "@/constants/Colors";
+import * as Notifications from "expo-notifications";
 
 export default function NewTodoScreen() {
   const router = useRouter();
@@ -41,6 +42,14 @@ export default function NewTodoScreen() {
 
     try {
       await createTask(userId, name, description, category, date);
+
+      Notifications.scheduleNotificationAsync({
+        content: {
+          title: name,
+          subtitle: category.charAt(0).toUpperCase() + category.slice(1),
+        },
+        trigger: new Date(date),
+      });
 
       setName("");
       setDescription("");
