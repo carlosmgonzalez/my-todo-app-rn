@@ -1,16 +1,9 @@
 import { db } from "@/firebase/firebaseConfig";
 import { Category } from "@/interfaces";
-import {
-  getDatabase,
-  onValue,
-  push,
-  ref,
-  remove,
-  set,
-} from "firebase/database";
+import { onValue, push, ref, remove, set } from "firebase/database";
 
 export const createCategory = async (userId: string, name: string) => {
-  const categoryRef = ref(db, "users/" + userId + "/categories");
+  const categoryRef = ref(db, "todoApp/users/" + userId + "/categories");
   const newCategory = push(categoryRef);
   await set(newCategory, {
     name,
@@ -21,7 +14,7 @@ export const getAllCategories = async (
   userId: string,
   setCategories: React.Dispatch<React.SetStateAction<Category[] | undefined>>
 ) => {
-  const allCategoriesRef = ref(db, "users/" + userId + "/categories");
+  const allCategoriesRef = ref(db, "todoApp/users/" + userId + "/categories");
   onValue(allCategoriesRef, (snapshot) => {
     if (snapshot.val()) {
       const response = snapshot.val();
@@ -39,7 +32,7 @@ export const deleteCategory = async (userId: string, categoryId: string) => {
   try {
     const categoryRef = ref(
       db,
-      "users/" + userId + "/categories/" + categoryId
+      "todoApp/users/" + userId + "/categories/" + categoryId
     );
     await remove(categoryRef);
   } catch (error) {

@@ -17,5 +17,6 @@ export * from "./profile/LogoutButton";
 export * from "./profile/InfoUser";
 export * from "./profile/EditCategoryListButton";
 export * from "./profile/AlertMessage";
+export * from "./profile/DeleteProfileButton";
 
 export * from "./notification/Notification";

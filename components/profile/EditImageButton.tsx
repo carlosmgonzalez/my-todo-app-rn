@@ -1,9 +1,4 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-} from "react-native";
+import { TouchableOpacity, useWindowDimensions } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "@/constants/Colors";
@@ -13,9 +8,7 @@ import {
   getStorage,
   listAll,
   ref,
-  uploadBytes,
   uploadBytesResumable,
-  uploadString,
 } from "firebase/storage";
 import { getAuth, updateProfile } from "firebase/auth";
 import { Dispatch, SetStateAction } from "react";
@@ -25,7 +18,7 @@ export const EditImageButton = ({
 }: {
   setPhotoUrl: Dispatch<SetStateAction<string | null | undefined>>;
 }) => {
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   const storage = getStorage();
   const auth = getAuth();
@@ -48,7 +41,7 @@ export const EditImageButton = ({
     const fileExtension = result.assets[0].uri.split(".").at(-1);
     const fileName = `${Date.now()}.${fileExtension}`;
 
-    const existUserPhoto = ref(storage, "userPhoto/" + userUid);
+    const existUserPhoto = ref(storage, "todoApp/userPhoto/" + userUid);
     const list = await listAll(existUserPhoto);
     if (list.items.length !== 0) {
       const fullPathUserPhoto = list.items[0].fullPath;
@@ -56,7 +49,10 @@ export const EditImageButton = ({
       deleteObject(refUserPhoto);
     }
 
-    const storageRef = ref(storage, "userPhoto/" + userUid + "/" + fileName);
+    const storageRef = ref(
+      storage,
+      "todoApp/userPhoto/" + userUid + "/" + fileName
+    );
     const uploadUserPhoto = uploadBytesResumable(storageRef, imageBlob);
 
     uploadUserPhoto.on(

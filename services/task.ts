@@ -2,7 +2,6 @@ import { db } from "@/firebase/firebaseConfig";
 import { TaskDB, TaskResponse } from "@/interfaces";
 import {
   get,
-  getDatabase,
   onValue,
   push,
   ref,
@@ -19,7 +18,7 @@ export const createTask = async (
   date: Date
 ) => {
   try {
-    const userTasksRef = ref(db, "users/" + userId + "/tasks");
+    const userTasksRef = ref(db, "todoApp/users/" + userId + "/tasks");
     const newTaskRef = push(userTasksRef);
 
     await set(newTaskRef, {
@@ -39,7 +38,7 @@ export const getAllTasks = (
   setTasks: React.Dispatch<React.SetStateAction<TaskResponse | undefined>>
 ) => {
   try {
-    const allTaskRef = ref(db, "users/" + userId + "/tasks");
+    const allTaskRef = ref(db, "todoApp/users/" + userId + "/tasks");
     onValue(allTaskRef, (snapshot) => {
       if (snapshot.val()) {
         const tasks = snapshot.val();
@@ -57,7 +56,7 @@ export const getTaskById = (
   setTask: React.Dispatch<React.SetStateAction<TaskDB | undefined>>
 ) => {
   try {
-    const taskRef = ref(db, "users/" + userId + "/tasks/" + taskId);
+    const taskRef = ref(db, "todoApp/users/" + userId + "/tasks/" + taskId);
     onValue(taskRef, (snapshot) => {
       if (snapshot.val()) {
         const task = snapshot.val();
@@ -71,7 +70,7 @@ export const getTaskById = (
 
 export const toggleTaskDone = async (userId: string, taskId: string) => {
   try {
-    const taskRef = ref(db, "users/" + userId + "/tasks/" + taskId);
+    const taskRef = ref(db, "todoApp/users/" + userId + "/tasks/" + taskId);
     const snapshot = await get(taskRef);
 
     if (snapshot.exists()) {
@@ -87,7 +86,7 @@ export const toggleTaskDone = async (userId: string, taskId: string) => {
 
 export const deleteTaskById = async (userId: string, taskId: string) => {
   try {
-    const taskRef = ref(db, "users/" + userId + "/tasks/" + taskId);
+    const taskRef = ref(db, "todoApp/users/" + userId + "/tasks/" + taskId);
     await remove(taskRef);
   } catch (error) {
     throw error;

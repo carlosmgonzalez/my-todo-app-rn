@@ -1,3 +1,22 @@
+// import * as fs from "fs";
+// import * as path from "path";
+
+// const base64String = process.env.GOOGLE_SERVICES_JSON_BASE64;
+// if (base64String) {
+//   const googleServicesJsonPath = path.resolve(
+//     __dirname,
+//     "google-services.json"
+//   );
+//   fs.writeFileSync(
+//     googleServicesJsonPath,
+//     Buffer.from(base64String, "base64").toString("utf-8")
+//   );
+// }
+
+// googleServicesFile: process.env.GOOGLE_SERVICES_JSON_BASE64
+//   ? "google-services.json"
+//   : undefined,
+
 module.exports = {
   expo: {
     name: "Todo",

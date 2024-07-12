@@ -1,7 +1,6 @@
 import { auth } from "@/firebase/firebaseConfig";
 import {
   createUserWithEmailAndPassword,
-  getAuth,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
