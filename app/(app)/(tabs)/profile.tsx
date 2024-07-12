@@ -1,5 +1,6 @@
 import {
   ChangePasswordButton,
+  DeleteProfileButton,
   EditCategoryListButton,
   EditProfileButton,
   InfoUser,
@@ -27,6 +28,7 @@ export default function ProfileScreen() {
       <ChangePasswordButton />
       <EditCategoryListButton />
       <LogoutButton />
+      <DeleteProfileButton />
     </View>
   );
 }
